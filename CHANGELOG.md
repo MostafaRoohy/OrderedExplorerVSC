@@ -1,3 +1,11 @@
+## 0.4.0
+
+- Add **Copy to Clipboard (Copy4AI)** to Ordered Explorer item context menus.
+- Add **Copy Project Structure (Copy4AI)** to Ordered Explorer item context menus.
+- Preserve Ordered Explorer custom ordering in generated project trees.
+- Support file, folder, root, and multi-selection copying.
+- Skip duplicate nested selections, detect binary content, and cap copied file content at 1 MiB.
+
 # Changelog
 
 ## 0.3.1 — 2026-07-21

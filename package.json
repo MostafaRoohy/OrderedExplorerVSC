@@ -2,7 +2,7 @@
   "name": "ordered-explorer",
   "displayName": "Ordered Explorer",
   "description": "A native-looking workspace explorer with authoritative custom file ordering stored in .code-workspace settings.",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "publisher": "mostafaroohy-local",
   "license": "MIT",
   "engines": {
@@ -134,6 +134,16 @@
       {
         "command": "orderedExplorer.paste",
         "title": "Paste",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.copyForAI",
+        "title": "Copy to Clipboard (Copy4AI)",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.copyProjectStructure",
+        "title": "Copy Project Structure (Copy4AI)",
         "category": "Ordered Explorer"
       },
       {
@@ -302,6 +312,16 @@
           "command": "orderedExplorer.paste",
           "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
           "group": "3_clipboard@3"
+        },
+        {
+          "command": "orderedExplorer.copyForAI",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
+          "group": "4_ai@1"
+        },
+        {
+          "command": "orderedExplorer.copyProjectStructure",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
+          "group": "4_ai@2"
         },
         {
           "command": "orderedExplorer.copyPath",

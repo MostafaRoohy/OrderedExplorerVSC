@@ -4,6 +4,7 @@ import { OrderedExplorerDragAndDropController } from './explorer/dragDrop';
 import { OrderedExplorerProvider } from './explorer/provider';
 import { OrderConfigurationService } from './ordering/config';
 import { ReorderService } from './ordering/reorder';
+import { AiCopyService } from './services/aiCopy';
 import { ExclusionService } from './services/exclusions';
 import { FileOperationsService } from './services/fileOperations';
 import { ExplorerWatcher } from './services/watcher';
@@ -13,6 +14,7 @@ export function activate(context: vscode.ExtensionContext): void {
     const exclusions = new ExclusionService();
     const provider = new OrderedExplorerProvider(orderConfiguration, exclusions);
     const fileOperations = new FileOperationsService(provider, orderConfiguration);
+    const aiCopy = new AiCopyService(provider);
     const reorder = new ReorderService(provider, orderConfiguration);
     const dragAndDrop = new OrderedExplorerDragAndDropController(
         provider,
@@ -34,6 +36,7 @@ export function activate(context: vscode.ExtensionContext): void {
         fileOperations,
         reorder,
         orderConfiguration,
+        aiCopy,
     );
     const watcher = new ExplorerWatcher(provider);
 

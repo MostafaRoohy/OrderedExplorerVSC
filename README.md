@@ -412,3 +412,14 @@ Generated directories and packages such as `node_modules/`, `dist/`, `.vscode-te
 ## Important limitation
 
 VS Code does not expose a supported API for replacing `workbench.explorer.fileView`. Ordered Explorer is therefore a separate native `TreeView` in the same Explorer container. See `docs/PARITY_MATRIX.md` and `docs/KNOWN_LIMITATIONS.md`.
+
+## AI context copying
+
+Right-click a file, folder, workspace root, or multi-selection inside **Ordered Explorer** and choose:
+
+- **Copy to Clipboard (Copy4AI)** — copies the selected project structure followed by the contents of readable text files in Markdown code blocks.
+- **Copy Project Structure (Copy4AI)** — copies only the selected structure as a text tree.
+
+The generated tree follows Ordered Explorer's authoritative custom order and respects the files currently visible through its exclusion rules. Binary files are represented by a placeholder, and files larger than 1 MiB are omitted from content copying.
+
+These focused commands are independently implemented in Ordered Explorer and are inspired by the MIT-licensed [Copy4AI](https://github.com/LeonKohli/copy4ai) extension.

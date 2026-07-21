@@ -11,3 +11,6 @@ tsconfig.json
 package-lock.json
 .gitignore
 runIntegrationTests.mjs
+
+COMMIT_MESSAGE.md
+VERIFICATION.md

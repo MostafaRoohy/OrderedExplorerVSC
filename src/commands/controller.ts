@@ -3,6 +3,7 @@ import { ExplorerNode } from '../explorer/node';
 import { OrderedExplorerProvider } from '../explorer/provider';
 import { OrderConfigurationService } from '../ordering/config';
 import { ReorderService } from '../ordering/reorder';
+import { AiCopyService } from '../services/aiCopy';
 import { FileOperationsService } from '../services/fileOperations';
 import { mayRevealTree } from '../services/revealPolicy';
 
@@ -16,6 +17,7 @@ export class CommandController implements vscode.Disposable {
         private readonly fileOperations: FileOperationsService,
         private readonly reorder: ReorderService,
         private readonly configuration: OrderConfigurationService,
+        private readonly aiCopy: AiCopyService,
     ) {
         this.register('orderedExplorer.refresh', () => this.provider.refresh());
         this.register('orderedExplorer.collapseAll', () => this.collapseAll());
@@ -47,6 +49,10 @@ export class CommandController implements vscode.Disposable {
             this.fileOperations.copy(this.resolveNodes(item, selected), true));
         this.register('orderedExplorer.paste', (item) =>
             this.fileOperations.paste(this.resolvePrimary(item)));
+        this.register('orderedExplorer.copyForAI', (item, selected) =>
+            this.aiCopy.copyToClipboard(this.resolveNodes(item, selected)));
+        this.register('orderedExplorer.copyProjectStructure', (item, selected) =>
+            this.aiCopy.copyProjectStructure(this.resolveNodes(item, selected)));
         this.register('orderedExplorer.copyPath', (item, selected) =>
             this.fileOperations.copyPath(this.resolveNodes(item, selected), false));
         this.register('orderedExplorer.copyRelativePath', (item, selected) =>
