@@ -48,8 +48,8 @@ describe('context-menu manifest', () => {
             manifest.contributes.submenus.map((submenu) => [submenu.id, submenu.label]),
         );
 
-        expect(labels.get('orderedExplorer.submenu.clipboardAi')).toBe('Clipboard & AI');
-        expect(labels.get('orderedExplorer.submenu.clipboardAiEmoji')).toBe('📋 Clipboard & AI');
+        expect(labels.get('orderedExplorer.submenu.clipboardAi')).toBe('ClipBoard');
+        expect(labels.get('orderedExplorer.submenu.clipboardAiEmoji')).toBe('📋 ClipBoard');
         expect(labels.get('orderedExplorer.submenu.customOrder')).toBe('Custom Order');
         expect(labels.get('orderedExplorer.submenu.customOrderEmoji')).toBe('↕️ Custom Order');
         expect(labels.get('orderedExplorer.submenu.manage')).toBe('Manage');
@@ -71,6 +71,42 @@ describe('context-menu manifest', () => {
     });
 
 
+    it('uses the requested submenu command order and removes obsolete manage commands', () => {
+        const commandIds = new Set(
+            manifest.contributes.commands.map((command) => command.command),
+        );
+        const manage = manifest.contributes.menus['orderedExplorer.submenu.manage'] ?? [];
+        const clipboard = manifest.contributes.menus['orderedExplorer.submenu.clipboardAi'] ?? [];
+        const customOrder = manifest.contributes.menus['orderedExplorer.submenu.customOrder'] ?? [];
+
+        expect(manage.map((entry) => entry.command)).toEqual([
+            'orderedExplorer.revealInOS',
+            'orderedExplorer.openTerminal',
+            'orderedExplorer.compareSelected',
+        ]);
+        expect(clipboard.map((entry) => entry.command)).toEqual([
+            'orderedExplorer.copy',
+            'orderedExplorer.cut',
+            'orderedExplorer.paste',
+            'orderedExplorer.copyPath',
+            'orderedExplorer.copyRelativePath',
+            'orderedExplorer.copyForAI',
+            'orderedExplorer.copyProjectStructure',
+        ]);
+        expect(customOrder.map((entry) => entry.command)).toEqual([
+            'orderedExplorer.moveUp',
+            'orderedExplorer.moveDown',
+            'orderedExplorer.moveToTop',
+            'orderedExplorer.moveToBottom',
+            'orderedExplorer.placeBefore',
+            'orderedExplorer.placeAfter',
+            'orderedExplorer.removeCustomPosition',
+        ]);
+
+        expect(commandIds.has('orderedExplorer.captureCurrentOrder')).toBe(false);
+        expect(commandIds.has('orderedExplorer.resetDirectoryOrder')).toBe(false);
+        expect(commandIds.has('orderedExplorer.cleanStaleOrder')).toBe(false);
+    });
 
     it('registers every emoji presentation alias in the command controller', () => {
         const controllerSource = readFileSync(

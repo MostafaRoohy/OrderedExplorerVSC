@@ -70,47 +70,6 @@ export class ReorderService {
         this.provider.refresh(parent);
     }
 
-    public async captureCurrentOrder(directory: ExplorerNode | undefined): Promise<void> {
-        const target = directory?.isDirectory ? directory : directory?.parent;
-        if (!target) {
-            return;
-        }
-        const children = await this.provider.getDirectoryChildren(target);
-        await this.saveExactOrder(target, children);
-        void vscode.window.showInformationMessage(`Captured order for ${target.name}.`);
-    }
-
-    public async resetDirectoryOrder(directory: ExplorerNode | undefined): Promise<void> {
-        const target = directory?.isDirectory ? directory : directory?.parent;
-        if (!target) {
-            return;
-        }
-        await this.configuration.removeDirectoryOrder(
-            target.workspaceFolder,
-            target.relativePath,
-        );
-        this.provider.refresh(target);
-    }
-
-    public async cleanStale(directory: ExplorerNode | undefined): Promise<void> {
-        const target = directory?.isDirectory ? directory : directory?.parent;
-        if (!target) {
-            return;
-        }
-        const children = await this.provider.getDirectoryChildren(target);
-        const report = await this.configuration.cleanStale(
-            target.workspaceFolder,
-            target.relativePath,
-            children.map((child) => child.name),
-        );
-        this.provider.refresh(target);
-        void vscode.window.showInformationMessage(
-            report.removed.length
-                ? `Removed ${report.removed.length} stale order entr${report.removed.length === 1 ? 'y' : 'ies'}.`
-                : 'No stale order entries were found.',
-        );
-    }
-
     private async moveBlock(
         nodes: readonly ExplorerNode[],
         direction: 'up' | 'down' | 'top' | 'bottom',

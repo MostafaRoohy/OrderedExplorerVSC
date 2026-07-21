@@ -32,11 +32,7 @@ const MENU_EMOJI_ALIASES: Readonly<Record<string, string>> = {
     'orderedExplorer.menuEmoji.moveToBottom':          'orderedExplorer.moveToBottom',
     'orderedExplorer.menuEmoji.placeBefore':           'orderedExplorer.placeBefore',
     'orderedExplorer.menuEmoji.placeAfter':            'orderedExplorer.placeAfter',
-    'orderedExplorer.menuEmoji.removeCustomPosition':  'orderedExplorer.removeCustomPosition',
-    'orderedExplorer.menuEmoji.captureCurrentOrder':   'orderedExplorer.captureCurrentOrder',
-    'orderedExplorer.menuEmoji.resetDirectoryOrder':   'orderedExplorer.resetDirectoryOrder',
-    'orderedExplorer.menuEmoji.cleanStaleOrder':       'orderedExplorer.cleanStaleOrder',
-};
+    'orderedExplorer.menuEmoji.removeCustomPosition':  'orderedExplorer.removeCustomPosition',};
 
 export class CommandController implements vscode.Disposable {
     private readonly disposables: vscode.Disposable[] = [];
@@ -108,12 +104,6 @@ export class CommandController implements vscode.Disposable {
             this.reorder.placeAfter(this.resolveNodes(item, selected)));
         this.register('orderedExplorer.removeCustomPosition', (item, selected) =>
             this.reorder.removeCustomPosition(this.resolveNodes(item, selected)));
-        this.register('orderedExplorer.captureCurrentOrder', (item) =>
-            this.reorder.captureCurrentOrder(this.resolvePrimary(item)));
-        this.register('orderedExplorer.resetDirectoryOrder', (item) =>
-            this.reorder.resetDirectoryOrder(this.resolvePrimary(item)));
-        this.register('orderedExplorer.cleanStaleOrder', (item) =>
-            this.reorder.cleanStale(this.resolvePrimary(item)));
         this.register('orderedExplorer.openWorkspaceFile', async () => {
             if (vscode.workspace.workspaceFile) {
                 await vscode.commands.executeCommand('vscode.open', vscode.workspace.workspaceFile);

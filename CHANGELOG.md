@@ -1,8 +1,17 @@
 # Changelog
 
+## 0.6.0
+
+- Reorder the item context menu into Open, New, Manage, workspace actions, ClipBoard, and Custom Order sections.
+- Rename Clipboard & AI to ClipBoard.
+- Rename Reveal in File Explorer to Open in File Explorer.
+- Rename Compare Selected to Git Diff Selected.
+- Rename Copy Path to Copy Absolute Path.
+- Remove Capture Current Directory Order, Reset Directory Order, and Clean Stale Order Entries from commands and menus.
+
 ## 0.5.0 — 2026-07-21
 
-- Group related right-click actions into configurable **Clipboard & AI**, **Custom Order**, and **Manage** submenus.
+- Group related right-click actions into configurable **ClipBoard**, **Custom Order**, and **Manage** submenus.
 - Add configurable emoji-prefixed titles for right-click commands and submenu labels.
 - Preserve a fully flat, plain-text context menu when both presentation settings are disabled.
 - Hide emoji presentation aliases from the Command Palette while routing them to canonical commands.

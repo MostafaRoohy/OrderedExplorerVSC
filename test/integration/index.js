@@ -14,7 +14,6 @@ suite('Ordered Explorer extension host smoke tests', () => {
             'orderedExplorer.newFile',
             'orderedExplorer.rename',
             'orderedExplorer.moveUp',
-            'orderedExplorer.cleanStaleOrder',
         ]) {
             assert.ok(commands.includes(command), `Missing command: ${command}`);
         }

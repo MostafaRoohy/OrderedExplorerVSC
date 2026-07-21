@@ -55,7 +55,7 @@ The right-click menu has two independent presentation settings:
 }
 ```
 
-- `useSubmenus` groups related commands under **Clipboard & AI**, **Custom Order**, and **Manage**.
+- `useSubmenus` groups related commands under **ClipBoard**, **Custom Order**, and **Manage**.
 - `useEmojiTitles` prefixes both direct command labels and submenu labels with emoji symbols.
 - Disabling both settings restores a flat, plain-text context menu.
 

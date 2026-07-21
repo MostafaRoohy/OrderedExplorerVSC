@@ -350,7 +350,7 @@ Ordered Explorer contributes one **Collapse All** button:
 Ordered Explorer groups related right-click actions into three submenus by default:
 
 ```text
-📋 Clipboard & AI
+📋 ClipBoard
 ↕️ Custom Order
 🛠️ Manage
 ```
@@ -448,7 +448,7 @@ VS Code does not expose a supported API for replacing `workbench.explorer.fileVi
 
 ## AI context copying
 
-Right-click a file, folder, workspace root, or multi-selection inside **Ordered Explorer**. With the default submenu layout, open **📋 Clipboard & AI**, then choose:
+Right-click a file, folder, workspace root, or multi-selection inside **Ordered Explorer**. With the default submenu layout, open **📋 ClipBoard**, then choose:
 
 - **Copy to Clipboard (Copy4AI)** — copies the selected project structure followed by the contents of readable text files in Markdown code blocks.
 - **Copy Project Structure (Copy4AI)** — copies only the selected structure as a text tree.

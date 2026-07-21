@@ -96,47 +96,6 @@ export class OrderConfigurationService {
         );
     }
 
-    public async removeDirectoryOrder(
-        folder: vscode.WorkspaceFolder,
-        parentRelativePath: string,
-    ): Promise<void> {
-        const normalizedParent = normalizeRelativePath(parentRelativePath);
-        if (!normalizedParent) {
-            await this.updateOrder(folder, '', ['*']);
-            return;
-        }
-
-        const configuration = vscode.workspace.getConfiguration(SECTION, folder.uri);
-        if ((vscode.workspace.workspaceFolders?.length ?? 0) > 1) {
-            const roots = configuration.get<Record<string, MultiRootOrderConfig>>('roots', {});
-            const current = roots[folder.name] ?? {};
-            const directoryOrder = cloneDirectoryOrder(current.directoryOrder ?? {});
-            delete directoryOrder[normalizedParent];
-            await configuration.update(
-                'roots',
-                {
-                    ...roots,
-                    [folder.name]: {
-                        ...current,
-                        directoryOrder,
-                    },
-                },
-                vscode.ConfigurationTarget.Workspace,
-            );
-            return;
-        }
-
-        const directoryOrder = cloneDirectoryOrder(
-            configuration.get<Record<string, readonly string[]>>('directoryOrder', {}),
-        );
-        delete directoryOrder[normalizedParent];
-        await configuration.update(
-            'directoryOrder',
-            directoryOrder,
-            vscode.ConfigurationTarget.Workspace,
-        );
-    }
-
     public async renameEntry(
         folder: vscode.WorkspaceFolder,
         parentRelativePath: string,
@@ -213,19 +172,6 @@ export class OrderConfigurationService {
         if (isDirectory) {
             await this.removeDirectoryPrefix(folder, relativePath);
         }
-    }
-
-    public async cleanStale(
-        folder: vscode.WorkspaceFolder,
-        parentRelativePath: string,
-        actualNames: readonly string[],
-    ): Promise<StaleOrderReport> {
-        const actual = new Set(actualNames);
-        const current = this.getOrder(folder, parentRelativePath);
-        const removed = current.filter((item) => item !== '*' && !actual.has(item));
-        const retained = current.filter((item) => item === '*' || actual.has(item));
-        await this.updateOrder(folder, parentRelativePath, retained);
-        return { removed, retained };
     }
 
     private getDeleteConfirmation(
