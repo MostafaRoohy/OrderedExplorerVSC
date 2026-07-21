@@ -11,7 +11,8 @@ export interface ExplorerConfig extends RootOrderConfig {
     readonly fallbackSort: FallbackSort;
     readonly autoReveal: boolean;
     readonly showExcludedFiles: boolean;
-    readonly confirmDelete: boolean;
+    readonly confirmTrashDelete: boolean;
+    readonly confirmPermanentDelete: boolean;
     readonly followSymlinks: boolean;
 }
 

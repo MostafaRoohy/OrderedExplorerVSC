@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.0 — 2026-07-21
+
+- Removed the `+` Expand All action and retained one Collapse All toolbar button.
+- Kept workspace roots expanded after collapsing their descendants.
+- Replaced the unreliable workspace-root double-click command with a dedicated native creation-surface row.
+- Added unit-tested double-click tracking for the creation surface.
+- Added separate **Don't Ask Again** behavior for Trash deletion and permanent deletion.
+- Added `orderedExplorer.confirmTrashDelete` and `orderedExplorer.confirmPermanentDelete` settings.
+- Retained the old `orderedExplorer.confirmDelete` setting as a deprecated fallback for existing workspaces.
+- Prevented file-operation and reorder context menus from appearing on the creation-surface row.
+
 ## 0.2.0 — 2026-07-21
 
 - Added a packaged extension icon while retaining the monochrome Explorer view icon.

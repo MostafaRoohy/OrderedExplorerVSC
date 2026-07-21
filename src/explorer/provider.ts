@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { OrderConfigurationService } from '../ordering/config';
 import { applyAuthoritativeOrder } from '../ordering/sorter';
 import { ExclusionService } from '../services/exclusions';
-import { basename, dirname, isEqualOrParent, relativePath } from '../util/path';
+import { dirname, isEqualOrParent, relativePath } from '../util/path';
 import { ExplorerNode } from './node';
 
 export class OrderedExplorerProvider implements vscode.TreeDataProvider<ExplorerNode> {
@@ -18,6 +18,30 @@ export class OrderedExplorerProvider implements vscode.TreeDataProvider<Explorer
     ) {}
 
     public getTreeItem(node: ExplorerNode): vscode.TreeItem {
+        if (node.isCreationSurface) {
+            const surface = new vscode.TreeItem(
+                node.name,
+                vscode.TreeItemCollapsibleState.None,
+            );
+            surface.id = node.id;
+            surface.contextValue = node.contextValue;
+            surface.iconPath = new vscode.ThemeIcon('new-file');
+            surface.description = 'double-click';
+            surface.tooltip = new vscode.MarkdownString(
+                'Double-click this row to create a file or folder. End the name with `/` to create a directory.',
+            );
+            surface.accessibilityInformation = {
+                label: 'Double-click to create a file or folder',
+                role: 'button',
+            };
+            surface.command = {
+                command: 'orderedExplorer.surfaceActivate',
+                title: 'Create File or Folder',
+                arguments: [node],
+            };
+            return surface;
+        }
+
         const collapsibleState = node.isDirectory
             ? (node.isWorkspaceRoot
                 ? vscode.TreeItemCollapsibleState.Expanded
@@ -38,11 +62,6 @@ export class OrderedExplorerProvider implements vscode.TreeDataProvider<Explorer
 
         if (node.isWorkspaceRoot) {
             item.iconPath = new vscode.ThemeIcon('root-folder');
-            item.command = {
-                command: 'orderedExplorer.surfaceActivate',
-                title: 'Create File or Folder',
-                arguments: [node],
-            };
         }
 
         if (!node.isDirectory) {
@@ -69,7 +88,10 @@ export class OrderedExplorerProvider implements vscode.TreeDataProvider<Explorer
             return [];
         }
 
-        if (parent.isSymbolicLink && !this.orderConfiguration.get(parent.workspaceFolder).followSymlinks) {
+        if (
+            parent.isSymbolicLink
+            && !this.orderConfiguration.get(parent.workspaceFolder).followSymlinks
+        ) {
             return [];
         }
 
@@ -121,8 +143,7 @@ export class OrderedExplorerProvider implements vscode.TreeDataProvider<Explorer
             parent.workspaceFolder,
             parent.relativePath,
         );
-
-        return applyAuthoritativeOrder(
+        const orderedNodes = applyAuthoritativeOrder(
             visibleNodes.map((node) => ({
                 node,
                 name: node.name,
@@ -132,6 +153,12 @@ export class OrderedExplorerProvider implements vscode.TreeDataProvider<Explorer
             order,
             config.fallbackSort,
         ).map((entry) => entry.node);
+
+        if (!parent.isWorkspaceRoot) {
+            return orderedNodes;
+        }
+
+        return [this.getCreationSurface(parent), ...orderedNodes];
     }
 
     public getParent(node: ExplorerNode): ExplorerNode | undefined {
@@ -186,7 +213,8 @@ export class OrderedExplorerProvider implements vscode.TreeDataProvider<Explorer
     }
 
     public async getDirectoryChildren(node: ExplorerNode): Promise<ExplorerNode[]> {
-        return this.getChildren(node);
+        const children = await this.getChildren(node);
+        return children.filter((child) => !child.isCreationSurface);
     }
 
     public findNearestCachedParent(uri: vscode.Uri): ExplorerNode | undefined {
@@ -230,7 +258,9 @@ export class OrderedExplorerProvider implements vscode.TreeDataProvider<Explorer
         folder: vscode.WorkspaceFolder,
         uri: vscode.Uri,
     ): Promise<ExplorerNode | undefined> {
-        const root = this.getWorkspaceRoots().find((node) => node.workspaceFolder.index === folder.index);
+        const root = this.getWorkspaceRoots().find(
+            (node) => node.workspaceFolder.index === folder.index,
+        );
         if (!root) {
             return undefined;
         }
@@ -272,6 +302,26 @@ export class OrderedExplorerProvider implements vscode.TreeDataProvider<Explorer
         return parent;
     }
 
+    private getCreationSurface(parent: ExplorerNode): ExplorerNode {
+        const key = `${parent.id}:creation-surface`;
+        const existing = this.nodeCache.get(key);
+        if (existing) {
+            return existing;
+        }
+
+        const surface = new ExplorerNode(
+            parent.uri,
+            vscode.FileType.Unknown,
+            parent.workspaceFolder,
+            parent,
+            false,
+            undefined,
+            true,
+        );
+        this.nodeCache.set(key, surface);
+        return surface;
+    }
+
     private cacheNode(node: ExplorerNode): ExplorerNode {
         this.nodeCache.set(node.uri.toString(), node);
         return node;
@@ -281,7 +331,9 @@ export class OrderedExplorerProvider implements vscode.TreeDataProvider<Explorer
         const tooltip = new vscode.MarkdownString(undefined, true);
         tooltip.appendCodeblock(node.uri.toString());
         if (node.isWorkspaceRoot) {
-            tooltip.appendMarkdown('\nDouble-click the workspace root to create a file or folder.');
+            tooltip.appendMarkdown(
+                '\nUse the creation row directly below this root to add a file or folder.',
+            );
         }
         if (node.isSymbolicLink) {
             tooltip.appendMarkdown('\nSymbolic link');

@@ -2,7 +2,7 @@
   "name": "ordered-explorer",
   "displayName": "Ordered Explorer",
   "description": "A native-looking workspace explorer with authoritative custom file ordering stored in .code-workspace settings.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "mostafaroohy-local",
   "license": "MIT",
   "engines": {
@@ -60,12 +60,6 @@
         "title": "Collapse All",
         "category": "Ordered Explorer",
         "icon": "$(collapse-all)"
-      },
-      {
-        "command": "orderedExplorer.expandAll",
-        "title": "Expand All",
-        "category": "Ordered Explorer",
-        "icon": "$(add)"
       },
       {
         "command": "orderedExplorer.revealActiveFile",
@@ -239,12 +233,7 @@
         },
         {
           "command": "orderedExplorer.collapseAll",
-          "when": "view == orderedExplorer.files && !orderedExplorer.allCollapsed",
-          "group": "navigation@3"
-        },
-        {
-          "command": "orderedExplorer.expandAll",
-          "when": "view == orderedExplorer.files && orderedExplorer.allCollapsed",
+          "when": "view == orderedExplorer.files",
           "group": "navigation@3"
         },
         {
@@ -276,37 +265,37 @@
         },
         {
           "command": "orderedExplorer.rename",
-          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder)",
           "group": "2_workspace@1"
         },
         {
           "command": "orderedExplorer.delete",
-          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder)",
           "group": "2_workspace@2"
         },
         {
           "command": "orderedExplorer.deletePermanently",
-          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder)",
           "group": "2_workspace@2.1"
         },
         {
           "command": "orderedExplorer.duplicate",
-          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder)",
           "group": "2_workspace@3"
         },
         {
           "command": "orderedExplorer.move",
-          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder)",
           "group": "2_workspace@4"
         },
         {
           "command": "orderedExplorer.copy",
-          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder)",
           "group": "3_clipboard@1"
         },
         {
           "command": "orderedExplorer.cut",
-          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder)",
           "group": "3_clipboard@2"
         },
         {
@@ -316,57 +305,57 @@
         },
         {
           "command": "orderedExplorer.copyPath",
-          "when": "view == orderedExplorer.files",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
           "group": "4_path@1"
         },
         {
           "command": "orderedExplorer.copyRelativePath",
-          "when": "view == orderedExplorer.files",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
           "group": "4_path@2"
         },
         {
           "command": "orderedExplorer.revealInOS",
-          "when": "view == orderedExplorer.files",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
           "group": "4_path@3"
         },
         {
           "command": "orderedExplorer.openTerminal",
-          "when": "view == orderedExplorer.files",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
           "group": "4_path@4"
         },
         {
           "command": "orderedExplorer.moveUp",
-          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder)",
           "group": "5_order@1"
         },
         {
           "command": "orderedExplorer.moveDown",
-          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder)",
           "group": "5_order@2"
         },
         {
           "command": "orderedExplorer.moveToTop",
-          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder)",
           "group": "5_order@3"
         },
         {
           "command": "orderedExplorer.moveToBottom",
-          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder)",
           "group": "5_order@4"
         },
         {
           "command": "orderedExplorer.placeBefore",
-          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder)",
           "group": "5_order@5"
         },
         {
           "command": "orderedExplorer.placeAfter",
-          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder)",
           "group": "5_order@6"
         },
         {
           "command": "orderedExplorer.removeCustomPosition",
-          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder)",
           "group": "5_order@7"
         },
         {
@@ -510,17 +499,30 @@
           "default": false,
           "description": "Show files excluded by files.exclude."
         },
-        "orderedExplorer.confirmDelete": {
-          "type": "boolean",
-          "scope": "window",
-          "default": true,
-          "description": "Ask for confirmation before moving resources to Trash or deleting them permanently."
-        },
         "orderedExplorer.followSymlinks": {
           "type": "boolean",
           "scope": "window",
           "default": false,
           "description": "Allow expanding directory symbolic links. Disabled by default to prevent recursive loops."
+        },
+        "orderedExplorer.confirmTrashDelete": {
+          "type": "boolean",
+          "scope": "window",
+          "default": true,
+          "description": "Ask for confirmation before moving resources to Trash. The confirmation dialog can disable future prompts."
+        },
+        "orderedExplorer.confirmPermanentDelete": {
+          "type": "boolean",
+          "scope": "window",
+          "default": true,
+          "description": "Ask for confirmation before permanently deleting resources. The confirmation dialog can disable future prompts."
+        },
+        "orderedExplorer.confirmDelete": {
+          "type": "boolean",
+          "scope": "window",
+          "default": true,
+          "description": "Legacy shared delete-confirmation setting. Use the separate Trash and permanent-delete settings instead.",
+          "deprecationMessage": "Use orderedExplorer.confirmTrashDelete and orderedExplorer.confirmPermanentDelete."
         }
       }
     }

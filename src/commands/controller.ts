@@ -3,14 +3,12 @@ import { ExplorerNode } from '../explorer/node';
 import { OrderedExplorerProvider } from '../explorer/provider';
 import { OrderConfigurationService } from '../ordering/config';
 import { ReorderService } from '../ordering/reorder';
+import { DoubleClickTracker } from '../services/doubleClick';
 import { FileOperationsService } from '../services/fileOperations';
-
-const SURFACE_DOUBLE_CLICK_MS = 500;
 
 export class CommandController implements vscode.Disposable {
     private readonly disposables: vscode.Disposable[] = [];
-    private readonly expandedDirectoryIds = new Set<string>();
-    private lastSurfaceActivation: { id: string; at: number } | undefined;
+    private readonly surfaceDoubleClick = new DoubleClickTracker();
     private isCollapsingAll = false;
 
     public constructor(
@@ -22,7 +20,6 @@ export class CommandController implements vscode.Disposable {
     ) {
         this.register('orderedExplorer.refresh', () => this.provider.refresh());
         this.register('orderedExplorer.collapseAll', () => this.collapseAll());
-        this.register('orderedExplorer.expandAll', () => this.expandAll());
         this.register('orderedExplorer.surfaceActivate', (item) =>
             this.handleSurfaceActivation(item));
         this.register('orderedExplorer.revealActiveFile', () => this.revealActiveFile(true));
@@ -31,8 +28,12 @@ export class CommandController implements vscode.Disposable {
             this.fileOperations.open(this.resolveNodes(item, selected)));
         this.register('orderedExplorer.openToSide', (item, selected) =>
             this.fileOperations.open(this.resolveNodes(item, selected), true));
-        this.register('orderedExplorer.newFile', (item) => this.fileOperations.createFile(item));
-        this.register('orderedExplorer.newFolder', (item) => this.fileOperations.createFolder(item));
+        this.register('orderedExplorer.newFile', (item) => this.fileOperations.createFile(
+            this.resolvePrimary(item),
+        ));
+        this.register('orderedExplorer.newFolder', (item) => this.fileOperations.createFolder(
+            this.resolvePrimary(item),
+        ));
         this.register('orderedExplorer.rename', (item) =>
             this.fileOperations.rename(this.resolvePrimary(item)));
         this.register('orderedExplorer.delete', (item, selected) =>
@@ -90,31 +91,19 @@ export class CommandController implements vscode.Disposable {
         });
 
         this.disposables.push(
-            this.treeView.onDidExpandElement(({ element }) => {
-                if (!element.isWorkspaceRoot) {
-                    this.expandedDirectoryIds.add(element.id);
-                    void this.updateCollapseContext();
-                }
-            }),
             this.treeView.onDidCollapseElement(({ element }) => {
-                if (element.isWorkspaceRoot) {
-                    if (!this.isCollapsingAll) {
-                        void this.keepRootExpanded(element);
-                    }
-                    return;
+                if (element.isWorkspaceRoot && !this.isCollapsingAll) {
+                    void this.keepRootExpanded(element);
                 }
-                this.expandedDirectoryIds.delete(element.id);
-                void this.updateCollapseContext();
             }),
         );
     }
 
     public async initialize(): Promise<void> {
-        await vscode.commands.executeCommand(
-            'setContext',
-            'orderedExplorer.allCollapsed',
-            false,
-        );
+        const roots = await this.provider.getChildren();
+        for (const root of roots) {
+            await this.keepRootExpanded(root);
+        }
     }
 
     public async revealActiveFile(select: boolean = false): Promise<void> {
@@ -167,17 +156,16 @@ export class CommandController implements vscode.Disposable {
         selected?: readonly ExplorerNode[],
     ): ExplorerNode[] {
         const selection = selected?.length ? [...selected] : [...this.treeView.selection];
-        if (item && !selection.some((node) => node.id === item.id)) {
-            return [item];
-        }
-        if (selection.length) {
-            return selection;
-        }
-        return item ? [item] : [];
+        const resolved = item && !selection.some((node) => node.id === item.id)
+            ? [item]
+            : (selection.length ? selection : (item ? [item] : []));
+
+        return resolved.filter((node) => !node.isCreationSurface);
     }
 
     private resolvePrimary(item?: ExplorerNode): ExplorerNode | undefined {
-        return item ?? this.treeView.selection[0];
+        const node = item ?? this.treeView.selection[0];
+        return node?.isCreationSurface ? node.parent : node;
     }
 
     private async collapseAll(): Promise<void> {
@@ -190,57 +178,17 @@ export class CommandController implements vscode.Disposable {
             this.isCollapsingAll = false;
         }
 
-        this.expandedDirectoryIds.clear();
         const roots = await this.provider.getChildren();
         for (const root of roots) {
             await this.keepRootExpanded(root);
         }
-        await this.updateCollapseContext();
-    }
-
-    private async expandAll(): Promise<void> {
-        this.expandedDirectoryIds.clear();
-
-        await vscode.window.withProgress(
-            {
-                location: vscode.ProgressLocation.Notification,
-                title: 'Expanding Ordered Explorer',
-                cancellable: true,
-            },
-            async (progress, token) => {
-                const queue = [...await this.provider.getChildren()];
-                let visited = 0;
-
-                while (queue.length && !token.isCancellationRequested) {
-                    const directory = queue.shift();
-                    if (!directory) {
-                        continue;
-                    }
-
-                    await this.treeView.reveal(directory, {
-                        select: false,
-                        focus: false,
-                        expand: true,
-                    });
-                    if (!directory.isWorkspaceRoot) {
-                        this.expandedDirectoryIds.add(directory.id);
-                    }
-
-                    const children = await this.provider.getDirectoryChildren(directory);
-                    queue.push(...children.filter((child) => child.isDirectory));
-
-                    visited += 1;
-                    if (visited % 25 === 0) {
-                        progress.report({ message: `${visited} folders expanded` });
-                    }
-                }
-            },
-        );
-
-        await this.updateCollapseContext();
     }
 
     private async keepRootExpanded(root: ExplorerNode): Promise<void> {
+        if (!root.isWorkspaceRoot) {
+            return;
+        }
+
         try {
             await this.treeView.reveal(root, {
                 select: false,
@@ -252,33 +200,16 @@ export class CommandController implements vscode.Disposable {
         }
     }
 
-    private async updateCollapseContext(): Promise<void> {
-        await vscode.commands.executeCommand(
-            'setContext',
-            'orderedExplorer.allCollapsed',
-            this.expandedDirectoryIds.size === 0,
-        );
-    }
-
     private async handleSurfaceActivation(item?: ExplorerNode): Promise<void> {
-        if (!item?.isWorkspaceRoot) {
+        if (!item?.isCreationSurface || !item.parent) {
             return;
         }
 
-        const now = Date.now();
-        const previous = this.lastSurfaceActivation;
-        this.lastSurfaceActivation = { id: item.id, at: now };
-
-        if (
-            !previous
-            || previous.id !== item.id
-            || now - previous.at > SURFACE_DOUBLE_CLICK_MS
-        ) {
+        if (!this.surfaceDoubleClick.activate(item.id)) {
             return;
         }
 
-        this.lastSurfaceActivation = undefined;
-        await this.fileOperations.createFile(item);
+        await this.fileOperations.createFile(item.parent);
     }
 
     private async toggleExcluded(): Promise<void> {

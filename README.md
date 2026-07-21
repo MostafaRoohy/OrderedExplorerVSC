@@ -6,24 +6,24 @@ The order is stored in the saved `.code-workspace` file under its `settings` obj
 
 ## Install a prebuilt VSIX
 
-When you already have `ordered-explorer-0.2.0.vsix`, install it from VS Code:
+When you already have `ordered-explorer-0.3.0.vsix`, install it from VS Code:
 
 1. Open **Extensions**.
 2. Open the `...` menu.
 3. Choose **Install from VSIX...**.
-4. Select `ordered-explorer-0.2.0.vsix`.
+4. Select `ordered-explorer-0.3.0.vsix`.
 5. Reload VS Code.
 
 Or install it from a terminal opened in the directory containing the VSIX:
 
 ```bash
-code --install-extension ./ordered-explorer-0.2.0.vsix
+code --install-extension ./ordered-explorer-0.3.0.vsix
 ```
 
 Use `--force` when reinstalling the same extension version after rebuilding it:
 
 ```bash
-code --install-extension ./ordered-explorer-0.2.0.vsix --force
+code --install-extension ./ordered-explorer-0.3.0.vsix --force
 ```
 
 ## Build a VSIX from source
@@ -60,13 +60,13 @@ After the command succeeds, the generated package appears in the repository root
 
 ```text
 OrderedExplorerVSC/
-└── ordered-explorer-0.2.0.vsix
+└── ordered-explorer-0.3.0.vsix
 ```
 
 Install that generated package with:
 
 ```bash
-code --install-extension ./ordered-explorer-0.2.0.vsix
+code --install-extension ./ordered-explorer-0.3.0.vsix
 ```
 
 ### Build from a downloaded source archive
@@ -78,7 +78,7 @@ npm ci
 npm run package:vsix
 ```
 
-The result is the same `ordered-explorer-0.2.0.vsix` file in the project root.
+The result is the same `ordered-explorer-0.3.0.vsix` file in the project root.
 
 ### What the packaging command does
 
@@ -171,10 +171,10 @@ On Linux and Windows, you can also enable the VS Code command-line launcher and 
 
 #### Reinstalling does not appear to change the extension
 
-When rebuilding version `0.2.0`, force the reinstall and reload VS Code:
+When rebuilding version `0.3.0`, force the reinstall and reload VS Code:
 
 ```bash
-code --install-extension ./ordered-explorer-0.2.0.vsix --force
+code --install-extension ./ordered-explorer-0.3.0.vsix --force
 ```
 
 For distributed releases, increment the `version` field in `package.json` before packaging a new release.
@@ -317,7 +317,7 @@ Right-click the Explorer sidebar header, hide **Folders**, and keep **Ordered Ex
 
 ## Fast file and folder creation
 
-Use the **New File** button in the Ordered Explorer title bar, or double-click the workspace-root row. The same input creates both files and directories:
+Use the **New File** button in the Ordered Explorer title bar, or double-click the dedicated **Double-click to create a file or folder** row directly below the workspace root. The same input creates both files and directories:
 
 ```text
 report.py          → creates a file
@@ -327,22 +327,22 @@ src/api/client.py  → creates parent directories and then the file
 
 A trailing `/` or `\` means **directory**. This makes a separate New Folder title-bar button unnecessary; the New Folder command remains available from a folder's context menu.
 
-The stable VS Code `TreeView` API does not expose mouse events for completely blank whitespace. Therefore, the double-click target is the workspace-root row, which is the reliable native-tree surface available to extensions.
+The stable VS Code `TreeView` API does not expose mouse events for completely blank whitespace. It also does not reliably run item commands on collapsible root rows. Ordered Explorer therefore contributes a non-collapsible creation-surface row under each workspace root; two clicks on that row reliably open the unified creation input.
 
 ## Delete behavior
 
 - **Delete** moves the selected files or folders to Trash when the filesystem supports it.
 - **Shift+Delete** permanently deletes the selection with `useTrash: false`.
-- Permanent deletion uses a modal warning when `orderedExplorer.confirmDelete` is enabled.
+- Each confirmation dialog includes **Don't Ask Again**. Choosing it performs the current deletion and disables future prompts for that deletion type.
+- Trash and permanent deletion use separate settings, so disabling the ordinary Delete prompt does not disable the Shift+Delete warning.
 
-## Collapse and expand button
+## Collapse button
 
-Ordered Explorer contributes one tree-state button:
+Ordered Explorer contributes one **Collapse All** button:
 
-- While folders are expanded, it shows **Collapse All**.
-- After collapsing, it changes to a **+** button and runs **Expand All**.
-- Workspace roots remain expanded; only their descendants are collapsed.
-- Manually expanding a folder changes the button back to Collapse All.
+- It collapses directory descendants only.
+- Workspace roots are immediately restored to their expanded state.
+- There is no Expand All action because recursively opening every directory is visually chaotic and unnecessarily expensive.
 
 ## Implemented behaviors
 
@@ -398,7 +398,9 @@ Right-click a directory and use:
 | `orderedExplorer.fallbackSort` | Sorting for `*` and unlisted items |
 | `orderedExplorer.autoReveal` | Reveal the active editor file |
 | `orderedExplorer.showExcludedFiles` | Ignore or apply `files.exclude` |
-| `orderedExplorer.confirmDelete` | Confirm before Trash or permanent deletion |
+| `orderedExplorer.confirmTrashDelete` | Confirm before moving resources to Trash |
+| `orderedExplorer.confirmPermanentDelete` | Confirm before permanent deletion |
+| `orderedExplorer.confirmDelete` | Deprecated shared fallback for older workspaces |
 | `orderedExplorer.followSymlinks` | Expand directory symbolic links |
 
 ## Development notes

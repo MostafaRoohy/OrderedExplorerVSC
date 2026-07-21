@@ -145,23 +145,8 @@ export class FileOperationsService {
             return;
         }
 
-        const configuration = this.orderConfiguration.get(deletable[0]!.workspaceFolder);
-        const names = deletable.slice(0, 5).map((node) => node.name).join(', ');
-        const suffix = deletable.length > 5 ? ` and ${deletable.length - 5} more` : '';
-        const actionLabel = permanently ? 'Delete Permanently' : 'Move to Trash';
-
-        if (configuration.confirmDelete) {
-            const message = permanently
-                ? `Permanently delete ${names}${suffix}? This action cannot be undone.`
-                : `Move ${names}${suffix} to Trash?`;
-            const confirmation = await vscode.window.showWarningMessage(
-                message,
-                { modal: true },
-                actionLabel,
-            );
-            if (confirmation !== actionLabel) {
-                return;
-            }
+        if (!await this.confirmDeletion(deletable, permanently)) {
+            return;
         }
 
         for (const node of deletable) {
@@ -177,15 +162,13 @@ export class FileOperationsService {
                         useTrash: true,
                     });
                 } catch (error) {
-                    const fallback = await vscode.window.showWarningMessage(
+                    const confirmed = await this.confirmDeletion(
+                        [node],
+                        true,
                         `Trash is unavailable for “${node.name}”. Delete it permanently instead?`,
-                        {
-                            modal: true,
-                            detail: error instanceof Error ? error.message : String(error),
-                        },
-                        'Delete Permanently',
+                        error instanceof Error ? error.message : String(error),
                     );
-                    if (fallback !== 'Delete Permanently') {
+                    if (!confirmed) {
                         continue;
                     }
                     await vscode.workspace.fs.delete(node.uri, {
@@ -443,6 +426,67 @@ export class FileOperationsService {
             files[1]!.uri,
             `${files[0]!.name} ↔ ${files[1]!.name}`,
         );
+    }
+
+    private async confirmDeletion(
+        nodes: readonly ExplorerNode[],
+        permanently: boolean,
+        messageOverride?: string,
+        detail?: string,
+    ): Promise<boolean> {
+        const setting = permanently
+            ? 'confirmPermanentDelete'
+            : 'confirmTrashDelete';
+        const mustConfirm = nodes.some((node) => {
+            const configuration = this.orderConfiguration.get(node.workspaceFolder);
+            return permanently
+                ? configuration.confirmPermanentDelete
+                : configuration.confirmTrashDelete;
+        });
+        if (!mustConfirm) {
+            return true;
+        }
+
+        const names = nodes.slice(0, 5).map((node) => node.name).join(', ');
+        const suffix = nodes.length > 5 ? ` and ${nodes.length - 5} more` : '';
+        type ConfirmationChoice = 'Delete Permanently' | 'Move to Trash' | "Don't Ask Again";
+
+        const actionLabel: ConfirmationChoice = permanently
+            ? 'Delete Permanently'
+            : 'Move to Trash';
+        const message = messageOverride ?? (permanently
+            ? `Permanently delete ${names}${suffix}? This action cannot be undone.`
+            : `Move ${names}${suffix} to Trash?`);
+        const dontAskAgain: ConfirmationChoice = "Don't Ask Again";
+        const options: vscode.MessageOptions = detail
+            ? { modal: true, detail }
+            : { modal: true };
+        const confirmation = await vscode.window.showWarningMessage<ConfirmationChoice>(
+            message,
+            options,
+            actionLabel,
+            dontAskAgain,
+        );
+
+        if (confirmation === dontAskAgain) {
+            const folders = new Map<number, vscode.WorkspaceFolder>();
+            for (const node of nodes) {
+                folders.set(node.workspaceFolder.index, node.workspaceFolder);
+            }
+            for (const folder of folders.values()) {
+                await vscode.workspace.getConfiguration(
+                    'orderedExplorer',
+                    folder.uri,
+                ).update(
+                    setting,
+                    false,
+                    vscode.ConfigurationTarget.Workspace,
+                );
+            }
+            return true;
+        }
+
+        return confirmation === actionLabel;
     }
 
     private resolveTargetDirectory(target?: ExplorerNode): ExplorerNode | undefined {

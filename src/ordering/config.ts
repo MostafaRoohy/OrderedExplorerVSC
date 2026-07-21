@@ -30,7 +30,14 @@ export class OrderConfigurationService {
             fallbackSort: configuration.get<FallbackSort>('fallbackSort', 'default'),
             autoReveal: configuration.get<boolean>('autoReveal', true),
             showExcludedFiles: configuration.get<boolean>('showExcludedFiles', false),
-            confirmDelete: configuration.get<boolean>('confirmDelete', true),
+            confirmTrashDelete: this.getDeleteConfirmation(
+                configuration,
+                'confirmTrashDelete',
+            ),
+            confirmPermanentDelete: this.getDeleteConfirmation(
+                configuration,
+                'confirmPermanentDelete',
+            ),
             followSymlinks: configuration.get<boolean>('followSymlinks', false),
         };
     }
@@ -219,6 +226,21 @@ export class OrderConfigurationService {
         const retained = current.filter((item) => item === '*' || actual.has(item));
         await this.updateOrder(folder, parentRelativePath, retained);
         return { removed, retained };
+    }
+
+    private getDeleteConfirmation(
+        configuration: vscode.WorkspaceConfiguration,
+        key: 'confirmTrashDelete' | 'confirmPermanentDelete',
+    ): boolean {
+        const explicit = configuration.inspect<boolean>(key);
+        const hasExplicitValue = explicit?.workspaceFolderValue !== undefined
+            || explicit?.workspaceValue !== undefined
+            || explicit?.globalValue !== undefined;
+        if (hasExplicitValue) {
+            return configuration.get<boolean>(key, true);
+        }
+
+        return configuration.get<boolean>('confirmDelete', true);
     }
 
     private getRootConfig(
