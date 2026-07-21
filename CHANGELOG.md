@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.8.0 — 2026-07-21
+
+- Move Open to the Side, Git Diff Selected, and Rename to the first direct-action group.
+- Add configurable New, Delete, Open In, Clipboard, Path, Content, and Order submenus.
+- Use concise submenu item labels such as File, Folder, Trash, Permanently, File Explorer, and Integrated Terminal.
+- Split path copying and AI-oriented content copying into separate submenus and flat-menu groups.
+- Remove the Duplicate and Move To commands, presentation aliases, menu entries, and command handlers.
+- Keep Git Diff Selected exactly once in the flat context menu.
+- Reorganize the flat menu into eight explicit separator groups.
+
 ## 0.7.0 — 2026-07-21
 
 - Reorganize the submenu layout into direct open/diff actions, filesystem actions, Open In, Clipboard, and Order sections.
@@ -10,7 +20,7 @@
 - Shorten custom-order command labels to Move Up, Move Down, Move to Top, and Move to Bottom.
 - Use the requested balance-scale emoji for Git Diff Selected.
 
-## 0.6.0 — 2026-07-21
+## 0.6.0
 
 - Reorder the item context menu into Open, New, Manage, workspace actions, ClipBoard, and Custom Order sections.
 - Rename Clipboard & AI to ClipBoard.
@@ -28,7 +38,7 @@
 - Add manifest tests for all context-menu presentation modes.
 - Move third-party notices into `README.md` and remove the standalone notices file.
 
-## 0.4.0 — 2026-07-21
+## 0.4.0
 
 - Add **Copy to Clipboard (Copy4AI)** to Ordered Explorer item context menus.
 - Add **Copy Project Structure (Copy4AI)** to Ordered Explorer item context menus.

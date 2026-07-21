@@ -2,7 +2,7 @@
   "name": "ordered-explorer",
   "displayName": "Ordered Explorer",
   "description": "A native-looking workspace explorer with authoritative custom file ordering stored in .code-workspace settings.",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "publisher": "mostafaroohy-local",
   "license": "MIT",
   "engines": {
@@ -109,16 +109,6 @@
       {
         "command": "orderedExplorer.deletePermanently",
         "title": "Delete Permanently",
-        "category": "Ordered Explorer"
-      },
-      {
-        "command": "orderedExplorer.duplicate",
-        "title": "Duplicate",
-        "category": "Ordered Explorer"
-      },
-      {
-        "command": "orderedExplorer.move",
-        "title": "Move To...",
         "category": "Ordered Explorer"
       },
       {
@@ -244,16 +234,6 @@
         "category": "Ordered Explorer"
       },
       {
-        "command": "orderedExplorer.menuEmoji.duplicate",
-        "title": "📑 Duplicate",
-        "category": "Ordered Explorer"
-      },
-      {
-        "command": "orderedExplorer.menuEmoji.move",
-        "title": "🚚 Move To...",
-        "category": "Ordered Explorer"
-      },
-      {
         "command": "orderedExplorer.menuEmoji.copy",
         "title": "📋 Copy",
         "category": "Ordered Explorer"
@@ -337,6 +317,66 @@
         "command": "orderedExplorer.menuEmoji.removeCustomPosition",
         "title": "🧹 Remove Custom Position",
         "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.menuSubmenu.newFile",
+        "title": "File...",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.menuSubmenu.newFolder",
+        "title": "Folder...",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.menuSubmenu.delete",
+        "title": "Trash",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.menuSubmenu.deletePermanently",
+        "title": "Permanently",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.menuSubmenu.revealInOS",
+        "title": "File Explorer",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.menuSubmenu.openTerminal",
+        "title": "Integrated Terminal",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.menuSubmenuEmoji.newFile",
+        "title": "📄 File...",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.menuSubmenuEmoji.newFolder",
+        "title": "📁 Folder...",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.menuSubmenuEmoji.delete",
+        "title": "🗑️ Trash",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.menuSubmenuEmoji.deletePermanently",
+        "title": "⚠️ Permanently",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.menuSubmenuEmoji.revealInOS",
+        "title": "📂 File Explorer",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.menuSubmenuEmoji.openTerminal",
+        "title": "💻 Integrated Terminal",
+        "category": "Ordered Explorer"
       }
     ],
     "menus": {
@@ -371,372 +411,332 @@
         {
           "command": "orderedExplorer.openToSide",
           "when": "view == orderedExplorer.files && viewItem == orderedExplorer.file && config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "1_open@1"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.openToSide",
-          "when": "view == orderedExplorer.files && viewItem == orderedExplorer.file && config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "1_open@1"
+          "group": "1_primary@1"
         },
         {
           "command": "orderedExplorer.compareSelected",
           "when": "view == orderedExplorer.files && viewItem == orderedExplorer.file && config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "1_open@2"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.compareSelected",
-          "when": "view == orderedExplorer.files && viewItem == orderedExplorer.file && config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "1_open@2"
-        },
-        {
-          "command": "orderedExplorer.newFile",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@1"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.newFile",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@1"
-        },
-        {
-          "command": "orderedExplorer.newFolder",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@2"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.newFolder",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@2"
+          "group": "1_primary@2"
         },
         {
           "command": "orderedExplorer.rename",
           "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@3"
+          "group": "1_primary@3"
         },
         {
-          "command": "orderedExplorer.menuEmoji.rename",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@3"
+          "submenu": "orderedExplorer.submenu.new",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "2_new@1"
         },
         {
-          "command": "orderedExplorer.duplicate",
+          "submenu": "orderedExplorer.submenu.delete",
           "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@4"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.duplicate",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@4"
-        },
-        {
-          "command": "orderedExplorer.move",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@5"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.move",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@5"
-        },
-        {
-          "command": "orderedExplorer.delete",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@6"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.delete",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@6"
-        },
-        {
-          "command": "orderedExplorer.deletePermanently",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@7"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.deletePermanently",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@7"
+          "group": "3_delete@1"
         },
         {
           "submenu": "orderedExplorer.submenu.openIn",
           "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "3_openIn@1"
-        },
-        {
-          "submenu": "orderedExplorer.submenu.openInEmoji",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "3_openIn@1"
+          "group": "4_openIn@1"
         },
         {
           "submenu": "orderedExplorer.submenu.clipboard",
           "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "4_clipboard@1"
+          "group": "5_clipboard@1"
         },
         {
-          "submenu": "orderedExplorer.submenu.clipboardEmoji",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "4_clipboard@1"
+          "submenu": "orderedExplorer.submenu.path",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "6_path@1"
+        },
+        {
+          "submenu": "orderedExplorer.submenu.content",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "7_content@1"
         },
         {
           "submenu": "orderedExplorer.submenu.order",
           "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "5_order@1"
+          "group": "8_order@1"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.openToSide",
+          "when": "view == orderedExplorer.files && viewItem == orderedExplorer.file && config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "1_primary@1"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.compareSelected",
+          "when": "view == orderedExplorer.files && viewItem == orderedExplorer.file && config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "1_primary@2"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.rename",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "1_primary@3"
+        },
+        {
+          "submenu": "orderedExplorer.submenu.newEmoji",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "2_new@1"
+        },
+        {
+          "submenu": "orderedExplorer.submenu.deleteEmoji",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "3_delete@1"
+        },
+        {
+          "submenu": "orderedExplorer.submenu.openInEmoji",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "4_openIn@1"
+        },
+        {
+          "submenu": "orderedExplorer.submenu.clipboardEmoji",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "5_clipboard@1"
+        },
+        {
+          "submenu": "orderedExplorer.submenu.pathEmoji",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "6_path@1"
+        },
+        {
+          "submenu": "orderedExplorer.submenu.contentEmoji",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "7_content@1"
         },
         {
           "submenu": "orderedExplorer.submenu.orderEmoji",
           "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "5_order@1"
+          "group": "8_order@1"
         },
         {
           "command": "orderedExplorer.openToSide",
           "when": "view == orderedExplorer.files && viewItem == orderedExplorer.file && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "1_open@1"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.openToSide",
-          "when": "view == orderedExplorer.files && viewItem == orderedExplorer.file && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "1_open@1"
-        },
-        {
-          "command": "orderedExplorer.newFile",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@1"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.newFile",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@1"
-        },
-        {
-          "command": "orderedExplorer.newFolder",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@2"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.newFolder",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@2"
-        },
-        {
-          "command": "orderedExplorer.rename",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@3"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.rename",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@3"
-        },
-        {
-          "command": "orderedExplorer.duplicate",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@4"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.duplicate",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@4"
-        },
-        {
-          "command": "orderedExplorer.move",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@5"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.move",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@5"
-        },
-        {
-          "command": "orderedExplorer.delete",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@6"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.delete",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@6"
-        },
-        {
-          "command": "orderedExplorer.deletePermanently",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@7"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.deletePermanently",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@7"
+          "group": "1_primary@1"
         },
         {
           "command": "orderedExplorer.compareSelected",
           "when": "view == orderedExplorer.files && viewItem == orderedExplorer.file && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@8"
+          "group": "1_primary@2"
         },
         {
-          "command": "orderedExplorer.menuEmoji.compareSelected",
-          "when": "view == orderedExplorer.files && viewItem == orderedExplorer.file && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "2_workspace@8"
+          "command": "orderedExplorer.rename",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "1_primary@3"
+        },
+        {
+          "command": "orderedExplorer.newFile",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "2_new@1"
+        },
+        {
+          "command": "orderedExplorer.newFolder",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "2_new@2"
+        },
+        {
+          "command": "orderedExplorer.delete",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "3_delete@1"
+        },
+        {
+          "command": "orderedExplorer.deletePermanently",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "3_delete@2"
         },
         {
           "command": "orderedExplorer.copy",
           "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "3_clipboard@1"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.copy",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "3_clipboard@1"
+          "group": "4_clipboard@1"
         },
         {
           "command": "orderedExplorer.cut",
           "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "3_clipboard@2"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.cut",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "3_clipboard@2"
+          "group": "4_clipboard@2"
         },
         {
           "command": "orderedExplorer.paste",
           "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "3_clipboard@3"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.paste",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "3_clipboard@3"
+          "group": "4_clipboard@3"
         },
         {
           "command": "orderedExplorer.copyPath",
           "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "3_clipboard@4"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.copyPath",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "3_clipboard@4"
+          "group": "5_path@1"
         },
         {
           "command": "orderedExplorer.copyRelativePath",
           "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "3_clipboard@5"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.copyRelativePath",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "3_clipboard@5"
+          "group": "5_path@2"
         },
         {
           "command": "orderedExplorer.copyForAI",
           "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "3_clipboard@6"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.copyForAI",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "3_clipboard@6"
+          "group": "6_content@1"
         },
         {
           "command": "orderedExplorer.copyProjectStructure",
           "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "3_clipboard@7"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.copyProjectStructure",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "3_clipboard@7"
+          "group": "6_content@2"
         },
         {
           "command": "orderedExplorer.revealInOS",
           "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "4_openIn@1"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.revealInOS",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "4_openIn@1"
+          "group": "7_openIn@1"
         },
         {
           "command": "orderedExplorer.openTerminal",
           "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "4_openIn@2"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.openTerminal",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "4_openIn@2"
+          "group": "7_openIn@2"
         },
         {
           "command": "orderedExplorer.moveUp",
           "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "5_order@1"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.moveUp",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "5_order@1"
+          "group": "8_order@1"
         },
         {
           "command": "orderedExplorer.moveDown",
           "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "5_order@2"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.moveDown",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "5_order@2"
+          "group": "8_order@2"
         },
         {
           "command": "orderedExplorer.moveToTop",
           "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "5_order@3"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.moveToTop",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "5_order@3"
+          "group": "8_order@3"
         },
         {
           "command": "orderedExplorer.moveToBottom",
           "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "5_order@4"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.moveToBottom",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "5_order@4"
+          "group": "8_order@4"
         },
         {
           "command": "orderedExplorer.placeBefore",
           "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "5_order@5"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.placeBefore",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "5_order@5"
+          "group": "8_order@5"
         },
         {
           "command": "orderedExplorer.placeAfter",
           "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "5_order@6"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.placeAfter",
-          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "5_order@6"
+          "group": "8_order@6"
         },
         {
           "command": "orderedExplorer.removeCustomPosition",
           "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && !config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "5_order@7"
+          "group": "8_order@7"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.openToSide",
+          "when": "view == orderedExplorer.files && viewItem == orderedExplorer.file && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "1_primary@1"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.compareSelected",
+          "when": "view == orderedExplorer.files && viewItem == orderedExplorer.file && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "1_primary@2"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.rename",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "1_primary@3"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.newFile",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "2_new@1"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.newFolder",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "2_new@2"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.delete",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "3_delete@1"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.deletePermanently",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "3_delete@2"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.copy",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "4_clipboard@1"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.cut",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "4_clipboard@2"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.paste",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "4_clipboard@3"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.copyPath",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "5_path@1"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.copyRelativePath",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "5_path@2"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.copyForAI",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "6_content@1"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.copyProjectStructure",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "6_content@2"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.revealInOS",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "7_openIn@1"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.openTerminal",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "7_openIn@2"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.moveUp",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "8_order@1"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.moveDown",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "8_order@2"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.moveToTop",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "8_order@3"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.moveToBottom",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "8_order@4"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.placeBefore",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "8_order@5"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.placeAfter",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
+          "group": "8_order@6"
         },
         {
           "command": "orderedExplorer.menuEmoji.removeCustomPosition",
           "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder) && !config.orderedExplorer.contextMenu.useSubmenus && config.orderedExplorer.contextMenu.useEmojiTitles",
-          "group": "5_order@7"
+          "group": "8_order@7"
         }
       ],
       "commandPalette": [
@@ -765,14 +765,6 @@
           "when": "false"
         },
         {
-          "command": "orderedExplorer.menuEmoji.duplicate",
-          "when": "false"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.move",
-          "when": "false"
-        },
-        {
           "command": "orderedExplorer.menuEmoji.copy",
           "when": "false"
         },
@@ -839,28 +831,76 @@
         {
           "command": "orderedExplorer.menuEmoji.removeCustomPosition",
           "when": "false"
+        },
+        {
+          "command": "orderedExplorer.menuSubmenu.newFile",
+          "when": "false"
+        },
+        {
+          "command": "orderedExplorer.menuSubmenu.newFolder",
+          "when": "false"
+        },
+        {
+          "command": "orderedExplorer.menuSubmenu.delete",
+          "when": "false"
+        },
+        {
+          "command": "orderedExplorer.menuSubmenu.deletePermanently",
+          "when": "false"
+        },
+        {
+          "command": "orderedExplorer.menuSubmenu.revealInOS",
+          "when": "false"
+        },
+        {
+          "command": "orderedExplorer.menuSubmenu.openTerminal",
+          "when": "false"
+        },
+        {
+          "command": "orderedExplorer.menuSubmenuEmoji.newFile",
+          "when": "false"
+        },
+        {
+          "command": "orderedExplorer.menuSubmenuEmoji.newFolder",
+          "when": "false"
+        },
+        {
+          "command": "orderedExplorer.menuSubmenuEmoji.delete",
+          "when": "false"
+        },
+        {
+          "command": "orderedExplorer.menuSubmenuEmoji.deletePermanently",
+          "when": "false"
+        },
+        {
+          "command": "orderedExplorer.menuSubmenuEmoji.revealInOS",
+          "when": "false"
+        },
+        {
+          "command": "orderedExplorer.menuSubmenuEmoji.openTerminal",
+          "when": "false"
         }
       ],
       "orderedExplorer.submenu.openIn": [
         {
-          "command": "orderedExplorer.revealInOS",
+          "command": "orderedExplorer.menuSubmenu.revealInOS",
           "when": "(viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
           "group": "1_items@1"
         },
         {
-          "command": "orderedExplorer.openTerminal",
+          "command": "orderedExplorer.menuSubmenu.openTerminal",
           "when": "(viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
           "group": "1_items@2"
         }
       ],
       "orderedExplorer.submenu.openInEmoji": [
         {
-          "command": "orderedExplorer.menuEmoji.revealInOS",
+          "command": "orderedExplorer.menuSubmenuEmoji.revealInOS",
           "when": "(viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
           "group": "1_items@1"
         },
         {
-          "command": "orderedExplorer.menuEmoji.openTerminal",
+          "command": "orderedExplorer.menuSubmenuEmoji.openTerminal",
           "when": "(viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
           "group": "1_items@2"
         }
@@ -880,26 +920,6 @@
           "command": "orderedExplorer.paste",
           "when": "(viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
           "group": "1_items@3"
-        },
-        {
-          "command": "orderedExplorer.copyPath",
-          "when": "(viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
-          "group": "1_items@4"
-        },
-        {
-          "command": "orderedExplorer.copyRelativePath",
-          "when": "(viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
-          "group": "1_items@5"
-        },
-        {
-          "command": "orderedExplorer.copyForAI",
-          "when": "(viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
-          "group": "1_items@6"
-        },
-        {
-          "command": "orderedExplorer.copyProjectStructure",
-          "when": "(viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
-          "group": "1_items@7"
         }
       ],
       "orderedExplorer.submenu.clipboardEmoji": [
@@ -917,26 +937,6 @@
           "command": "orderedExplorer.menuEmoji.paste",
           "when": "(viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
           "group": "1_items@3"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.copyPath",
-          "when": "(viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
-          "group": "1_items@4"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.copyRelativePath",
-          "when": "(viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
-          "group": "1_items@5"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.copyForAI",
-          "when": "(viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
-          "group": "1_items@6"
-        },
-        {
-          "command": "orderedExplorer.menuEmoji.copyProjectStructure",
-          "when": "(viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
-          "group": "1_items@7"
         }
       ],
       "orderedExplorer.submenu.order": [
@@ -1011,6 +1011,102 @@
           "command": "orderedExplorer.menuEmoji.removeCustomPosition",
           "when": "(viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder)",
           "group": "1_items@7"
+        }
+      ],
+      "orderedExplorer.submenu.new": [
+        {
+          "command": "orderedExplorer.menuSubmenu.newFile",
+          "when": "(viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
+          "group": "1_items@1"
+        },
+        {
+          "command": "orderedExplorer.menuSubmenu.newFolder",
+          "when": "(viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
+          "group": "1_items@2"
+        }
+      ],
+      "orderedExplorer.submenu.newEmoji": [
+        {
+          "command": "orderedExplorer.menuSubmenuEmoji.newFile",
+          "when": "(viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
+          "group": "1_items@1"
+        },
+        {
+          "command": "orderedExplorer.menuSubmenuEmoji.newFolder",
+          "when": "(viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
+          "group": "1_items@2"
+        }
+      ],
+      "orderedExplorer.submenu.delete": [
+        {
+          "command": "orderedExplorer.menuSubmenu.delete",
+          "when": "(viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder)",
+          "group": "1_items@1"
+        },
+        {
+          "command": "orderedExplorer.menuSubmenu.deletePermanently",
+          "when": "(viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder)",
+          "group": "1_items@2"
+        }
+      ],
+      "orderedExplorer.submenu.deleteEmoji": [
+        {
+          "command": "orderedExplorer.menuSubmenuEmoji.delete",
+          "when": "(viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder)",
+          "group": "1_items@1"
+        },
+        {
+          "command": "orderedExplorer.menuSubmenuEmoji.deletePermanently",
+          "when": "(viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder)",
+          "group": "1_items@2"
+        }
+      ],
+      "orderedExplorer.submenu.path": [
+        {
+          "command": "orderedExplorer.copyPath",
+          "when": "(viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
+          "group": "1_items@1"
+        },
+        {
+          "command": "orderedExplorer.copyRelativePath",
+          "when": "(viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
+          "group": "1_items@2"
+        }
+      ],
+      "orderedExplorer.submenu.pathEmoji": [
+        {
+          "command": "orderedExplorer.menuEmoji.copyPath",
+          "when": "(viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
+          "group": "1_items@1"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.copyRelativePath",
+          "when": "(viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
+          "group": "1_items@2"
+        }
+      ],
+      "orderedExplorer.submenu.content": [
+        {
+          "command": "orderedExplorer.copyForAI",
+          "when": "(viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
+          "group": "1_items@1"
+        },
+        {
+          "command": "orderedExplorer.copyProjectStructure",
+          "when": "(viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
+          "group": "1_items@2"
+        }
+      ],
+      "orderedExplorer.submenu.contentEmoji": [
+        {
+          "command": "orderedExplorer.menuEmoji.copyForAI",
+          "when": "(viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
+          "group": "1_items@1"
+        },
+        {
+          "command": "orderedExplorer.menuEmoji.copyProjectStructure",
+          "when": "(viewItem == orderedExplorer.file || viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
+          "group": "1_items@2"
         }
       ]
     },
@@ -1179,12 +1275,28 @@
     },
     "submenus": [
       {
+        "id": "orderedExplorer.submenu.new",
+        "label": "New..."
+      },
+      {
+        "id": "orderedExplorer.submenu.newEmoji",
+        "label": "New..."
+      },
+      {
+        "id": "orderedExplorer.submenu.delete",
+        "label": "Delete..."
+      },
+      {
+        "id": "orderedExplorer.submenu.deleteEmoji",
+        "label": "Delete..."
+      },
+      {
         "id": "orderedExplorer.submenu.openIn",
-        "label": "Open In"
+        "label": "Open In..."
       },
       {
         "id": "orderedExplorer.submenu.openInEmoji",
-        "label": "🛠️ Open In"
+        "label": "Open In..."
       },
       {
         "id": "orderedExplorer.submenu.clipboard",
@@ -1193,6 +1305,22 @@
       {
         "id": "orderedExplorer.submenu.clipboardEmoji",
         "label": "📋 Clipboard"
+      },
+      {
+        "id": "orderedExplorer.submenu.path",
+        "label": "Path"
+      },
+      {
+        "id": "orderedExplorer.submenu.pathEmoji",
+        "label": "Path"
+      },
+      {
+        "id": "orderedExplorer.submenu.content",
+        "label": "Content"
+      },
+      {
+        "id": "orderedExplorer.submenu.contentEmoji",
+        "label": "Content"
       },
       {
         "id": "orderedExplorer.submenu.order",

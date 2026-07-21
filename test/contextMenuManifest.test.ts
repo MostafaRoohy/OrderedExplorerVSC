@@ -49,6 +49,12 @@ function commandsFor(
         .map((entry) => entry.command ?? `submenu:${entry.submenu}`);
 }
 
+function submenuCommands(menu: string): string[] {
+    return (manifest.contributes.menus[menu] ?? [])
+        .sort((left, right) => (left.group ?? '').localeCompare(right.group ?? ''))
+        .map((entry) => entry.command ?? '');
+}
+
 describe('context-menu manifest', () => {
     it('contributes enabled-by-default submenu and emoji settings', () => {
         const properties = manifest.contributes.configuration.properties;
@@ -69,10 +75,18 @@ describe('context-menu manifest', () => {
         );
 
         expect(labels).toEqual(new Map([
-            ['orderedExplorer.submenu.openIn', 'Open In'],
-            ['orderedExplorer.submenu.openInEmoji', '🛠️ Open In'],
+            ['orderedExplorer.submenu.new', 'New...'],
+            ['orderedExplorer.submenu.newEmoji', 'New...'],
+            ['orderedExplorer.submenu.delete', 'Delete...'],
+            ['orderedExplorer.submenu.deleteEmoji', 'Delete...'],
+            ['orderedExplorer.submenu.openIn', 'Open In...'],
+            ['orderedExplorer.submenu.openInEmoji', 'Open In...'],
             ['orderedExplorer.submenu.clipboard', 'Clipboard'],
             ['orderedExplorer.submenu.clipboardEmoji', '📋 Clipboard'],
+            ['orderedExplorer.submenu.path', 'Path'],
+            ['orderedExplorer.submenu.pathEmoji', 'Path'],
+            ['orderedExplorer.submenu.content', 'Content'],
+            ['orderedExplorer.submenu.contentEmoji', 'Content'],
             ['orderedExplorer.submenu.order', 'Order'],
             ['orderedExplorer.submenu.orderEmoji', '↕️ Order'],
         ]));
@@ -98,32 +112,28 @@ describe('context-menu manifest', () => {
         expect(plain).toEqual([
             'orderedExplorer.openToSide',
             'orderedExplorer.compareSelected',
-            'orderedExplorer.newFile',
-            'orderedExplorer.newFolder',
             'orderedExplorer.rename',
-            'orderedExplorer.duplicate',
-            'orderedExplorer.move',
-            'orderedExplorer.delete',
-            'orderedExplorer.deletePermanently',
+            'submenu:orderedExplorer.submenu.new',
+            'submenu:orderedExplorer.submenu.delete',
             'submenu:orderedExplorer.submenu.openIn',
             'submenu:orderedExplorer.submenu.clipboard',
+            'submenu:orderedExplorer.submenu.path',
+            'submenu:orderedExplorer.submenu.content',
             'submenu:orderedExplorer.submenu.order',
         ]);
     });
 
-    it('uses the approved flat-menu order', () => {
+    it('uses the approved flat-menu order without duplicate Git Diff', () => {
         const plain = commandsFor('view/item/context', false, false);
 
         expect(plain).toEqual([
             'orderedExplorer.openToSide',
+            'orderedExplorer.compareSelected',
+            'orderedExplorer.rename',
             'orderedExplorer.newFile',
             'orderedExplorer.newFolder',
-            'orderedExplorer.rename',
-            'orderedExplorer.duplicate',
-            'orderedExplorer.move',
             'orderedExplorer.delete',
             'orderedExplorer.deletePermanently',
-            'orderedExplorer.compareSelected',
             'orderedExplorer.copy',
             'orderedExplorer.cut',
             'orderedExplorer.paste',
@@ -141,26 +151,36 @@ describe('context-menu manifest', () => {
             'orderedExplorer.placeAfter',
             'orderedExplorer.removeCustomPosition',
         ]);
+        expect(plain.filter((command) => command === 'orderedExplorer.compareSelected')).toHaveLength(1);
     });
 
-    it('uses the approved command order inside each submenu', () => {
-        expect((manifest.contributes.menus['orderedExplorer.submenu.openIn'] ?? [])
-            .map((entry) => entry.command)).toEqual([
-            'orderedExplorer.revealInOS',
-            'orderedExplorer.openTerminal',
+    it('uses the approved command order inside each plain submenu', () => {
+        expect(submenuCommands('orderedExplorer.submenu.new')).toEqual([
+            'orderedExplorer.menuSubmenu.newFile',
+            'orderedExplorer.menuSubmenu.newFolder',
         ]);
-        expect((manifest.contributes.menus['orderedExplorer.submenu.clipboard'] ?? [])
-            .map((entry) => entry.command)).toEqual([
+        expect(submenuCommands('orderedExplorer.submenu.delete')).toEqual([
+            'orderedExplorer.menuSubmenu.delete',
+            'orderedExplorer.menuSubmenu.deletePermanently',
+        ]);
+        expect(submenuCommands('orderedExplorer.submenu.openIn')).toEqual([
+            'orderedExplorer.menuSubmenu.revealInOS',
+            'orderedExplorer.menuSubmenu.openTerminal',
+        ]);
+        expect(submenuCommands('orderedExplorer.submenu.clipboard')).toEqual([
             'orderedExplorer.copy',
             'orderedExplorer.cut',
             'orderedExplorer.paste',
+        ]);
+        expect(submenuCommands('orderedExplorer.submenu.path')).toEqual([
             'orderedExplorer.copyPath',
             'orderedExplorer.copyRelativePath',
+        ]);
+        expect(submenuCommands('orderedExplorer.submenu.content')).toEqual([
             'orderedExplorer.copyForAI',
             'orderedExplorer.copyProjectStructure',
         ]);
-        expect((manifest.contributes.menus['orderedExplorer.submenu.order'] ?? [])
-            .map((entry) => entry.command)).toEqual([
+        expect(submenuCommands('orderedExplorer.submenu.order')).toEqual([
             'orderedExplorer.moveUp',
             'orderedExplorer.moveDown',
             'orderedExplorer.moveToTop',
@@ -171,47 +191,66 @@ describe('context-menu manifest', () => {
         ]);
     });
 
-    it('uses the approved concise command labels', () => {
+    it('uses concise submenu-specific labels', () => {
         const titles = new Map(
             manifest.contributes.commands.map((command) => [command.command, command.title]),
         );
 
-        expect(titles.get('orderedExplorer.copyForAI')).toBe('Copy Content to Clipboard');
-        expect(titles.get('orderedExplorer.copyProjectStructure')).toBe(
-            'Copy Hierarchy to Clipboard',
-        );
-        expect(titles.get('orderedExplorer.moveUp')).toBe('Move Up');
-        expect(titles.get('orderedExplorer.moveDown')).toBe('Move Down');
-        expect(titles.get('orderedExplorer.moveToTop')).toBe('Move to Top');
-        expect(titles.get('orderedExplorer.moveToBottom')).toBe('Move to Bottom');
-        expect(titles.get('orderedExplorer.menuEmoji.compareSelected')).toBe(
-            '⚖️ Git Diff Selected',
+        expect(titles.get('orderedExplorer.menuSubmenu.newFile')).toBe('File...');
+        expect(titles.get('orderedExplorer.menuSubmenu.newFolder')).toBe('Folder...');
+        expect(titles.get('orderedExplorer.menuSubmenu.delete')).toBe('Trash');
+        expect(titles.get('orderedExplorer.menuSubmenu.deletePermanently')).toBe('Permanently');
+        expect(titles.get('orderedExplorer.menuSubmenu.revealInOS')).toBe('File Explorer');
+        expect(titles.get('orderedExplorer.menuSubmenu.openTerminal')).toBe('Integrated Terminal');
+        expect(titles.get('orderedExplorer.menuSubmenuEmoji.delete')).toBe('🗑️ Trash');
+        expect(titles.get('orderedExplorer.menuSubmenuEmoji.openTerminal')).toBe(
+            '💻 Integrated Terminal',
         );
     });
 
-    it('registers every emoji presentation alias in the command controller', () => {
+    it('removes Duplicate and Move To commands from the extension', () => {
+        const commands = new Set(
+            manifest.contributes.commands.map((command) => command.command),
+        );
+        const allMenuCommands = Object.values(manifest.contributes.menus)
+            .flatMap((entries) => entries.map((entry) => entry.command))
+            .filter((command): command is string => Boolean(command));
         const controllerSource = readFileSync(
             resolve(process.cwd(), 'src/commands/controller.ts'),
             'utf8',
         );
-        const emojiAliases = manifest.contributes.commands
-            .map((command) => command.command)
-            .filter((command) => command.startsWith('orderedExplorer.menuEmoji.'));
 
-        expect(emojiAliases.every((command) => controllerSource.includes(`'${command}'`))).toBe(true);
+        expect(commands.has('orderedExplorer.duplicate')).toBe(false);
+        expect(commands.has('orderedExplorer.move')).toBe(false);
+        expect(allMenuCommands).not.toContain('orderedExplorer.duplicate');
+        expect(allMenuCommands).not.toContain('orderedExplorer.move');
+        expect(controllerSource).not.toContain("this.register('orderedExplorer.duplicate'");
+        expect(controllerSource).not.toContain("this.register('orderedExplorer.move'");
     });
 
-    it('hides emoji presentation aliases from the Command Palette', () => {
-        const emojiAliases = manifest.contributes.commands
+    it('registers every presentation alias in the command controller', () => {
+        const controllerSource = readFileSync(
+            resolve(process.cwd(), 'src/commands/controller.ts'),
+            'utf8',
+        );
+        const aliases = manifest.contributes.commands
             .map((command) => command.command)
-            .filter((command) => command.startsWith('orderedExplorer.menuEmoji.'));
+            .filter((command) => command.startsWith('orderedExplorer.menu'));
+
+        expect(aliases.every((command) => controllerSource.includes(`'${command}'`))).toBe(true);
+    });
+
+    it('hides presentation aliases from the Command Palette', () => {
+        const aliases = manifest.contributes.commands
+            .map((command) => command.command)
+            .filter((command) => command.startsWith('orderedExplorer.menu'));
         const hiddenCommands = new Set(
             (manifest.contributes.menus.commandPalette ?? [])
                 .filter((entry) => entry.when === 'false')
                 .map((entry) => entry.command),
         );
 
-        expect(emojiAliases.length).toBeGreaterThan(0);
-        expect(emojiAliases.every((command) => hiddenCommands.has(command))).toBe(true);
+        expect(aliases.length).toBeGreaterThan(0);
+        expect(aliases.every((command) => hiddenCommands.has(command))).toBe(true);
     });
 });

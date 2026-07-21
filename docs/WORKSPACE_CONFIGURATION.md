@@ -40,7 +40,6 @@ Operations initiated through Ordered Explorer update the workspace ordering:
 - Rename replaces the old name and rewrites nested directory keys.
 - Move removes the source entry and inserts the destination entry.
 - Delete removes the entry and descendant directory maps.
-- Duplicate inserts the copy after the original when possible.
 
 External filesystem operations are detected and refreshed, but an external rename cannot always be distinguished from an unrelated delete plus create. Stale names remain harmless and may be removed manually from the workspace ordering settings.
 

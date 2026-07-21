@@ -3,7 +3,6 @@ import * as vscode from 'vscode';
 import { OrderConfigurationService } from '../ordering/config';
 import type { ClipboardState } from '../types';
 import {
-    basename,
     dirname,
     isEqualOrParent,
     parentRelativePath,
@@ -188,58 +187,6 @@ export class FileOperationsService {
         }
 
         this.provider.refresh();
-    }
-
-    public async duplicate(nodes: readonly ExplorerNode[]): Promise<void> {
-        for (const node of nodes.filter((item) => !item.isWorkspaceRoot)) {
-            const destination = await this.uniqueCopyUri(node);
-            await vscode.workspace.fs.copy(node.uri, destination, { overwrite: false });
-
-            const destinationFolder = vscode.workspace.getWorkspaceFolder(destination);
-            if (destinationFolder) {
-                const destinationParent = parentRelativePath(destinationFolder, destination);
-                const order = this.orderConfiguration.getOrder(destinationFolder, destinationParent);
-                const originalIndex = order.indexOf(node.name);
-                const copiedName = basename(destination);
-                const nextOrder = [...order.filter((item) => item !== copiedName)];
-                if (originalIndex >= 0) {
-                    nextOrder.splice(originalIndex + 1, 0, copiedName);
-                } else {
-                    const wildcard = nextOrder.indexOf('*');
-                    nextOrder.splice(wildcard >= 0 ? wildcard : nextOrder.length, 0, copiedName);
-                }
-                await this.orderConfiguration.updateOrder(
-                    destinationFolder,
-                    destinationParent,
-                    nextOrder,
-                );
-            }
-        }
-
-        this.provider.refresh();
-    }
-
-    public async move(nodes: readonly ExplorerNode[]): Promise<void> {
-        const movable = nodes.filter((node) => !node.isWorkspaceRoot);
-        if (!movable.length) {
-            return;
-        }
-
-        const defaultUri = movable[0]!.parent?.uri ?? movable[0]!.workspaceFolder.uri;
-        const selected = await vscode.window.showOpenDialog({
-            title: 'Move To Folder',
-            defaultUri,
-            canSelectFiles: false,
-            canSelectFolders: true,
-            canSelectMany: false,
-            openLabel: 'Move Here',
-        });
-        const destination = selected?.[0];
-        if (!destination) {
-            return;
-        }
-
-        await this.moveToDirectory(movable, destination);
     }
 
     public copy(nodes: readonly ExplorerNode[], cut: boolean): void {

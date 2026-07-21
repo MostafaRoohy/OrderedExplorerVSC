@@ -7,32 +7,43 @@ import { AiCopyService } from '../services/aiCopy';
 import { FileOperationsService } from '../services/fileOperations';
 import { mayRevealTree } from '../services/revealPolicy';
 
-const MENU_EMOJI_ALIASES: Readonly<Record<string, string>> = {
-    'orderedExplorer.menuEmoji.openToSide':            'orderedExplorer.openToSide',
-    'orderedExplorer.menuEmoji.newFile':               'orderedExplorer.newFile',
-    'orderedExplorer.menuEmoji.newFolder':             'orderedExplorer.newFolder',
-    'orderedExplorer.menuEmoji.rename':                'orderedExplorer.rename',
-    'orderedExplorer.menuEmoji.delete':                'orderedExplorer.delete',
-    'orderedExplorer.menuEmoji.deletePermanently':     'orderedExplorer.deletePermanently',
-    'orderedExplorer.menuEmoji.duplicate':             'orderedExplorer.duplicate',
-    'orderedExplorer.menuEmoji.move':                  'orderedExplorer.move',
-    'orderedExplorer.menuEmoji.copy':                  'orderedExplorer.copy',
-    'orderedExplorer.menuEmoji.cut':                   'orderedExplorer.cut',
-    'orderedExplorer.menuEmoji.paste':                 'orderedExplorer.paste',
-    'orderedExplorer.menuEmoji.copyForAI':             'orderedExplorer.copyForAI',
-    'orderedExplorer.menuEmoji.copyProjectStructure':  'orderedExplorer.copyProjectStructure',
-    'orderedExplorer.menuEmoji.copyPath':              'orderedExplorer.copyPath',
-    'orderedExplorer.menuEmoji.copyRelativePath':      'orderedExplorer.copyRelativePath',
-    'orderedExplorer.menuEmoji.revealInOS':            'orderedExplorer.revealInOS',
-    'orderedExplorer.menuEmoji.openTerminal':          'orderedExplorer.openTerminal',
-    'orderedExplorer.menuEmoji.compareSelected':       'orderedExplorer.compareSelected',
-    'orderedExplorer.menuEmoji.moveUp':                'orderedExplorer.moveUp',
-    'orderedExplorer.menuEmoji.moveDown':              'orderedExplorer.moveDown',
-    'orderedExplorer.menuEmoji.moveToTop':             'orderedExplorer.moveToTop',
-    'orderedExplorer.menuEmoji.moveToBottom':          'orderedExplorer.moveToBottom',
-    'orderedExplorer.menuEmoji.placeBefore':           'orderedExplorer.placeBefore',
-    'orderedExplorer.menuEmoji.placeAfter':            'orderedExplorer.placeAfter',
-    'orderedExplorer.menuEmoji.removeCustomPosition':  'orderedExplorer.removeCustomPosition',};
+const MENU_PRESENTATION_ALIASES: Readonly<Record<string, string>> = {
+    'orderedExplorer.menuEmoji.openToSide':                    'orderedExplorer.openToSide',
+    'orderedExplorer.menuEmoji.newFile':                       'orderedExplorer.newFile',
+    'orderedExplorer.menuEmoji.newFolder':                     'orderedExplorer.newFolder',
+    'orderedExplorer.menuEmoji.rename':                        'orderedExplorer.rename',
+    'orderedExplorer.menuEmoji.delete':                        'orderedExplorer.delete',
+    'orderedExplorer.menuEmoji.deletePermanently':             'orderedExplorer.deletePermanently',
+    'orderedExplorer.menuEmoji.copy':                          'orderedExplorer.copy',
+    'orderedExplorer.menuEmoji.cut':                           'orderedExplorer.cut',
+    'orderedExplorer.menuEmoji.paste':                         'orderedExplorer.paste',
+    'orderedExplorer.menuEmoji.copyForAI':                     'orderedExplorer.copyForAI',
+    'orderedExplorer.menuEmoji.copyProjectStructure':          'orderedExplorer.copyProjectStructure',
+    'orderedExplorer.menuEmoji.copyPath':                      'orderedExplorer.copyPath',
+    'orderedExplorer.menuEmoji.copyRelativePath':              'orderedExplorer.copyRelativePath',
+    'orderedExplorer.menuEmoji.revealInOS':                    'orderedExplorer.revealInOS',
+    'orderedExplorer.menuEmoji.openTerminal':                  'orderedExplorer.openTerminal',
+    'orderedExplorer.menuEmoji.compareSelected':               'orderedExplorer.compareSelected',
+    'orderedExplorer.menuEmoji.moveUp':                        'orderedExplorer.moveUp',
+    'orderedExplorer.menuEmoji.moveDown':                      'orderedExplorer.moveDown',
+    'orderedExplorer.menuEmoji.moveToTop':                     'orderedExplorer.moveToTop',
+    'orderedExplorer.menuEmoji.moveToBottom':                  'orderedExplorer.moveToBottom',
+    'orderedExplorer.menuEmoji.placeBefore':                   'orderedExplorer.placeBefore',
+    'orderedExplorer.menuEmoji.placeAfter':                    'orderedExplorer.placeAfter',
+    'orderedExplorer.menuEmoji.removeCustomPosition':          'orderedExplorer.removeCustomPosition',
+    'orderedExplorer.menuSubmenu.newFile':                     'orderedExplorer.newFile',
+    'orderedExplorer.menuSubmenu.newFolder':                   'orderedExplorer.newFolder',
+    'orderedExplorer.menuSubmenu.delete':                      'orderedExplorer.delete',
+    'orderedExplorer.menuSubmenu.deletePermanently':           'orderedExplorer.deletePermanently',
+    'orderedExplorer.menuSubmenu.revealInOS':                  'orderedExplorer.revealInOS',
+    'orderedExplorer.menuSubmenu.openTerminal':                'orderedExplorer.openTerminal',
+    'orderedExplorer.menuSubmenuEmoji.newFile':                'orderedExplorer.newFile',
+    'orderedExplorer.menuSubmenuEmoji.newFolder':              'orderedExplorer.newFolder',
+    'orderedExplorer.menuSubmenuEmoji.delete':                 'orderedExplorer.delete',
+    'orderedExplorer.menuSubmenuEmoji.deletePermanently':      'orderedExplorer.deletePermanently',
+    'orderedExplorer.menuSubmenuEmoji.revealInOS':             'orderedExplorer.revealInOS',
+    'orderedExplorer.menuSubmenuEmoji.openTerminal':           'orderedExplorer.openTerminal',
+};
 
 export class CommandController implements vscode.Disposable {
     private readonly disposables: vscode.Disposable[] = [];
@@ -66,10 +77,6 @@ export class CommandController implements vscode.Disposable {
             this.fileOperations.delete(this.resolveNodes(item, selected), false));
         this.register('orderedExplorer.deletePermanently', (item, selected) =>
             this.fileOperations.delete(this.resolveNodes(item, selected), true));
-        this.register('orderedExplorer.duplicate', (item, selected) =>
-            this.fileOperations.duplicate(this.resolveNodes(item, selected)));
-        this.register('orderedExplorer.move', (item, selected) =>
-            this.fileOperations.move(this.resolveNodes(item, selected)));
         this.register('orderedExplorer.copy', (item, selected) =>
             this.fileOperations.copy(this.resolveNodes(item, selected), false));
         this.register('orderedExplorer.cut', (item, selected) =>
@@ -114,7 +121,7 @@ export class CommandController implements vscode.Disposable {
             }
         });
 
-        for (const [alias, target] of Object.entries(MENU_EMOJI_ALIASES)) {
+        for (const [alias, target] of Object.entries(MENU_PRESENTATION_ALIASES)) {
             this.registerAlias(alias, target);
         }
 

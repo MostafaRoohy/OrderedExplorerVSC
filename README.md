@@ -361,22 +361,25 @@ With submenus enabled, the right-click menu is organized as:
 ```text
 ↗️ Open to the Side
 ⚖️ Git Diff Selected
-
-────────────────────────
-
-📄 New File...
-📁 New Folder...
 ✏️ Rename...
-📑 Duplicate
-🚚 Move To...
-🗑️ Delete
-⚠️ Delete Permanently
 
 ────────────────────────
 
-🛠️ Open In  ›
-    📂 Open in File Explorer
-    💻 Open in Integrated Terminal
+New...  ›
+    📄 File...
+    📁 Folder...
+
+────────────────────────
+
+Delete...  ›
+    🗑️ Trash
+    ⚠️ Permanently
+
+────────────────────────
+
+Open In...  ›
+    📂 File Explorer
+    💻 Integrated Terminal
 
 ────────────────────────
 
@@ -384,8 +387,16 @@ With submenus enabled, the right-click menu is organized as:
     📋 Copy
     ✂️ Cut
     📥 Paste
+
+────────────────────────
+
+Path  ›
     🔗 Copy Absolute Path
     🧭 Copy Relative Path
+
+────────────────────────
+
+Content  ›
     🤖 Copy Content to Clipboard
     🌳 Copy Hierarchy to Clipboard
 
@@ -401,29 +412,36 @@ With submenus enabled, the right-click menu is organized as:
     🧹 Remove Custom Position
 ```
 
-With submenus disabled, the same commands use a flat five-section layout:
+With submenus disabled, the commands use a flat eight-section layout:
 
 ```text
 ↗️ Open to the Side
+⚖️ Git Diff Selected
+✏️ Rename...
 
 ────────────────────────
 
 📄 New File...
 📁 New Folder...
-✏️ Rename...
-📑 Duplicate
-🚚 Move To...
+
+────────────────────────
+
 🗑️ Delete
 ⚠️ Delete Permanently
-⚖️ Git Diff Selected
 
 ────────────────────────
 
 📋 Copy
 ✂️ Cut
 📥 Paste
+
+────────────────────────
+
 🔗 Copy Absolute Path
 🧭 Copy Relative Path
+
+────────────────────────
+
 🤖 Copy Content to Clipboard
 🌳 Copy Hierarchy to Clipboard
 
@@ -443,9 +461,9 @@ With submenus disabled, the same commands use a flat five-section layout:
 🧹 Remove Custom Position
 ```
 
-VS Code does not expose blank spacer rows for native context menus, so the flat layout uses separators only at major section boundaries.
+`Git Diff Selected` appears only once at the top of the flat menu. **Duplicate** and **Move To...** are no longer contributed commands.
 
-The four supported combinations remain:
+The four supported presentation combinations remain:
 
 | Submenus | Emoji titles | Result |
 |---:|---:|---|
@@ -468,7 +486,7 @@ Changing either setting updates the menu without recompiling the extension.
 - Active-editor auto-reveal while Ordered Explorer is already visible, preventing Source Control and other sidebar views from being replaced.
 - `files.exclude` filtering and an excluded-files toggle.
 - Unified file/folder creation; a trailing slash creates a directory.
-- Rename, move, duplicate, Trash/delete, permanent Shift+Delete, cut, copy and paste.
+- Rename, Trash/delete, permanent Shift+Delete, cut, copy and paste.
 - Copy absolute and workspace-relative paths.
 - Reveal in operating-system file manager.
 - Open folder in integrated terminal.
@@ -522,7 +540,7 @@ VS Code does not expose a supported API for replacing `workbench.explorer.fileVi
 
 ## AI context copying
 
-Right-click a file, folder, workspace root, or multi-selection inside **Ordered Explorer**. With the default submenu layout, open **📋 Clipboard**, then choose:
+Right-click a file, folder, workspace root, or multi-selection inside **Ordered Explorer**. With the default submenu layout, open **Content**, then choose:
 
 - **Copy Content to Clipboard** — copies the selected project structure followed by the contents of readable text files in Markdown code blocks.
 - **Copy Hierarchy to Clipboard** — copies only the selected structure as a text tree.
