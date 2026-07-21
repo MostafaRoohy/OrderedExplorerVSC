@@ -1,0 +1,13 @@
+.vscode/**
+.github/**
+src/**
+test/**
+docs/**
+sample/**
+node_modules/**
+*.vsix
+esbuild.mjs
+tsconfig.json
+package-lock.json
+.gitignore
+runIntegrationTests.mjs

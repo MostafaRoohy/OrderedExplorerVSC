@@ -1,0 +1,529 @@
+{
+  "name": "ordered-explorer",
+  "displayName": "Ordered Explorer",
+  "description": "A native-looking workspace explorer with authoritative custom file ordering stored in .code-workspace settings.",
+  "version": "0.1.0",
+  "publisher": "mostafaroohy-local",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.125.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "explorer",
+    "file ordering",
+    "custom sort",
+    "workspace"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onView:orderedExplorer.files",
+    "onCommand:orderedExplorer.refresh",
+    "onStartupFinished"
+  ],
+  "capabilities": {
+    "virtualWorkspaces": {
+      "supported": true
+    },
+    "untrustedWorkspaces": {
+      "supported": true
+    }
+  },
+  "contributes": {
+    "views": {
+      "explorer": [
+        {
+          "id": "orderedExplorer.files",
+          "name": "Ordered Explorer",
+          "icon": "resources/ordered-explorer.svg",
+          "visibility": "visible"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "orderedExplorer.files",
+        "contents": "Open a folder or a `.code-workspace` file to use Ordered Explorer.\n[Open Folder](command:vscode.openFolder)"
+      }
+    ],
+    "commands": [
+      {
+        "command": "orderedExplorer.refresh",
+        "title": "Refresh",
+        "category": "Ordered Explorer",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "orderedExplorer.collapseAll",
+        "title": "Collapse All",
+        "category": "Ordered Explorer",
+        "icon": "$(collapse-all)"
+      },
+      {
+        "command": "orderedExplorer.revealActiveFile",
+        "title": "Reveal Active File",
+        "category": "Ordered Explorer",
+        "icon": "$(target)"
+      },
+      {
+        "command": "orderedExplorer.toggleExcluded",
+        "title": "Toggle Excluded Files",
+        "category": "Ordered Explorer",
+        "icon": "$(eye)"
+      },
+      {
+        "command": "orderedExplorer.open",
+        "title": "Open",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.openToSide",
+        "title": "Open to the Side",
+        "category": "Ordered Explorer",
+        "icon": "$(split-horizontal)"
+      },
+      {
+        "command": "orderedExplorer.newFile",
+        "title": "New File...",
+        "category": "Ordered Explorer",
+        "icon": "$(new-file)"
+      },
+      {
+        "command": "orderedExplorer.newFolder",
+        "title": "New Folder...",
+        "category": "Ordered Explorer",
+        "icon": "$(new-folder)"
+      },
+      {
+        "command": "orderedExplorer.rename",
+        "title": "Rename...",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.delete",
+        "title": "Delete",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.duplicate",
+        "title": "Duplicate",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.move",
+        "title": "Move To...",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.copy",
+        "title": "Copy",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.cut",
+        "title": "Cut",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.paste",
+        "title": "Paste",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.copyPath",
+        "title": "Copy Path",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.copyRelativePath",
+        "title": "Copy Relative Path",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.revealInOS",
+        "title": "Reveal in File Explorer",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.openTerminal",
+        "title": "Open in Integrated Terminal",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.compareSelected",
+        "title": "Compare Selected",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.moveUp",
+        "title": "Move Up in Custom Order",
+        "category": "Ordered Explorer",
+        "icon": "$(arrow-up)"
+      },
+      {
+        "command": "orderedExplorer.moveDown",
+        "title": "Move Down in Custom Order",
+        "category": "Ordered Explorer",
+        "icon": "$(arrow-down)"
+      },
+      {
+        "command": "orderedExplorer.moveToTop",
+        "title": "Move to Top of Custom Order",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.moveToBottom",
+        "title": "Move to Bottom of Custom Order",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.placeBefore",
+        "title": "Place Before...",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.placeAfter",
+        "title": "Place After...",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.removeCustomPosition",
+        "title": "Remove Custom Position",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.captureCurrentOrder",
+        "title": "Capture Current Directory Order",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.resetDirectoryOrder",
+        "title": "Reset Directory Order",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.cleanStaleOrder",
+        "title": "Clean Stale Order Entries",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.openWorkspaceFile",
+        "title": "Open Workspace File",
+        "category": "Ordered Explorer"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "orderedExplorer.newFile",
+          "when": "view == orderedExplorer.files",
+          "group": "navigation@1"
+        },
+        {
+          "command": "orderedExplorer.newFolder",
+          "when": "view == orderedExplorer.files",
+          "group": "navigation@2"
+        },
+        {
+          "command": "orderedExplorer.refresh",
+          "when": "view == orderedExplorer.files",
+          "group": "navigation@3"
+        },
+        {
+          "command": "orderedExplorer.collapseAll",
+          "when": "view == orderedExplorer.files",
+          "group": "navigation@4"
+        },
+        {
+          "command": "orderedExplorer.revealActiveFile",
+          "when": "view == orderedExplorer.files",
+          "group": "navigation@5"
+        },
+        {
+          "command": "orderedExplorer.toggleExcluded",
+          "when": "view == orderedExplorer.files",
+          "group": "navigation@6"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "orderedExplorer.openToSide",
+          "when": "view == orderedExplorer.files && viewItem == orderedExplorer.file",
+          "group": "navigation@1"
+        },
+        {
+          "command": "orderedExplorer.newFile",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
+          "group": "navigation@2"
+        },
+        {
+          "command": "orderedExplorer.newFolder",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
+          "group": "navigation@3"
+        },
+        {
+          "command": "orderedExplorer.rename",
+          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "group": "2_workspace@1"
+        },
+        {
+          "command": "orderedExplorer.delete",
+          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "group": "2_workspace@2"
+        },
+        {
+          "command": "orderedExplorer.duplicate",
+          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "group": "2_workspace@3"
+        },
+        {
+          "command": "orderedExplorer.move",
+          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "group": "2_workspace@4"
+        },
+        {
+          "command": "orderedExplorer.copy",
+          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "group": "3_clipboard@1"
+        },
+        {
+          "command": "orderedExplorer.cut",
+          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "group": "3_clipboard@2"
+        },
+        {
+          "command": "orderedExplorer.paste",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
+          "group": "3_clipboard@3"
+        },
+        {
+          "command": "orderedExplorer.copyPath",
+          "when": "view == orderedExplorer.files",
+          "group": "4_path@1"
+        },
+        {
+          "command": "orderedExplorer.copyRelativePath",
+          "when": "view == orderedExplorer.files",
+          "group": "4_path@2"
+        },
+        {
+          "command": "orderedExplorer.revealInOS",
+          "when": "view == orderedExplorer.files",
+          "group": "4_path@3"
+        },
+        {
+          "command": "orderedExplorer.openTerminal",
+          "when": "view == orderedExplorer.files",
+          "group": "4_path@4"
+        },
+        {
+          "command": "orderedExplorer.moveUp",
+          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "group": "5_order@1"
+        },
+        {
+          "command": "orderedExplorer.moveDown",
+          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "group": "5_order@2"
+        },
+        {
+          "command": "orderedExplorer.moveToTop",
+          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "group": "5_order@3"
+        },
+        {
+          "command": "orderedExplorer.moveToBottom",
+          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "group": "5_order@4"
+        },
+        {
+          "command": "orderedExplorer.placeBefore",
+          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "group": "5_order@5"
+        },
+        {
+          "command": "orderedExplorer.placeAfter",
+          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "group": "5_order@6"
+        },
+        {
+          "command": "orderedExplorer.removeCustomPosition",
+          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "group": "5_order@7"
+        },
+        {
+          "command": "orderedExplorer.captureCurrentOrder",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
+          "group": "6_manage@1"
+        },
+        {
+          "command": "orderedExplorer.resetDirectoryOrder",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
+          "group": "6_manage@2"
+        },
+        {
+          "command": "orderedExplorer.cleanStaleOrder",
+          "when": "view == orderedExplorer.files && (viewItem == orderedExplorer.folder || viewItem == orderedExplorer.root)",
+          "group": "6_manage@3"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "orderedExplorer.rename",
+        "key": "f2",
+        "when": "focusedView == orderedExplorer.files"
+      },
+      {
+        "command": "orderedExplorer.delete",
+        "key": "delete",
+        "mac": "cmd+backspace",
+        "when": "focusedView == orderedExplorer.files"
+      },
+      {
+        "command": "orderedExplorer.copy",
+        "key": "ctrl+c",
+        "mac": "cmd+c",
+        "when": "focusedView == orderedExplorer.files"
+      },
+      {
+        "command": "orderedExplorer.cut",
+        "key": "ctrl+x",
+        "mac": "cmd+x",
+        "when": "focusedView == orderedExplorer.files"
+      },
+      {
+        "command": "orderedExplorer.paste",
+        "key": "ctrl+v",
+        "mac": "cmd+v",
+        "when": "focusedView == orderedExplorer.files"
+      },
+      {
+        "command": "orderedExplorer.moveUp",
+        "key": "alt+up",
+        "when": "focusedView == orderedExplorer.files"
+      },
+      {
+        "command": "orderedExplorer.moveDown",
+        "key": "alt+down",
+        "when": "focusedView == orderedExplorer.files"
+      }
+    ],
+    "configuration": {
+      "title": "Ordered Explorer",
+      "properties": {
+        "orderedExplorer.order": {
+          "type": "array",
+          "scope": "window",
+          "default": [
+            "*"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Authoritative final order for direct children of a single workspace root. Use * for all unlisted entries. In multi-root workspaces, use orderedExplorer.roots."
+        },
+        "orderedExplorer.directoryOrder": {
+          "type": "object",
+          "scope": "window",
+          "default": {},
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "description": "Authoritative final orders for nested directories. Keys are POSIX-style paths relative to the workspace root."
+        },
+        "orderedExplorer.roots": {
+          "type": "object",
+          "scope": "window",
+          "default": {},
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "order": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "directoryOrder": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "description": "Per-root ordering for multi-root workspaces, keyed by workspace-folder name."
+        },
+        "orderedExplorer.fallbackSort": {
+          "type": "string",
+          "scope": "window",
+          "enum": [
+            "default",
+            "mixed",
+            "filesFirst",
+            "type",
+            "modified"
+          ],
+          "default": "default",
+          "description": "Sorting applied only to entries represented by * or otherwise unlisted."
+        },
+        "orderedExplorer.autoReveal": {
+          "type": "boolean",
+          "scope": "window",
+          "default": true,
+          "description": "Reveal the active editor file in Ordered Explorer."
+        },
+        "orderedExplorer.showExcludedFiles": {
+          "type": "boolean",
+          "scope": "window",
+          "default": false,
+          "description": "Show files excluded by files.exclude."
+        },
+        "orderedExplorer.confirmDelete": {
+          "type": "boolean",
+          "scope": "window",
+          "default": true,
+          "description": "Ask for confirmation before permanently deleting resources."
+        },
+        "orderedExplorer.followSymlinks": {
+          "type": "boolean",
+          "scope": "window",
+          "default": false,
+          "description": "Allow expanding directory symbolic links. Disabled by default to prevent recursive loops."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "check-types": "tsc --noEmit",
+    "compile": "node esbuild.mjs",
+    "watch": "node esbuild.mjs --watch",
+    "test": "vitest run",
+    "vscode:prepublish": "npm run check-types && npm run test && npm run compile",
+    "package:vsix": "vsce package --no-dependencies",
+    "test:integration": "npm run compile && xvfb-run -a node runIntegrationTests.mjs"
+  },
+  "dependencies": {
+    "minimatch": "^10.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/vscode": "^1.125.0",
+    "@vscode/test-electron": "^3.0.0",
+    "@vscode/vsce": "^3.9.2",
+    "esbuild": "^0.25.8",
+    "mocha": "^11.7.6",
+    "typescript": "^7.0.2",
+    "vitest": "^3.2.4"
+  }
+}
