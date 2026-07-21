@@ -1,3 +1,14 @@
+# Changelog
+
+## 0.5.0 — 2026-07-21
+
+- Group related right-click actions into configurable **Clipboard & AI**, **Custom Order**, and **Manage** submenus.
+- Add configurable emoji-prefixed titles for right-click commands and submenu labels.
+- Preserve a fully flat, plain-text context menu when both presentation settings are disabled.
+- Hide emoji presentation aliases from the Command Palette while routing them to canonical commands.
+- Add manifest tests for all context-menu presentation modes.
+- Move third-party notices into `README.md` and remove the standalone notices file.
+
 ## 0.4.0
 
 - Add **Copy to Clipboard (Copy4AI)** to Ordered Explorer item context menus.
@@ -6,7 +17,6 @@
 - Support file, folder, root, and multi-selection copying.
 - Skip duplicate nested selections, detect binary content, and cap copied file content at 1 MiB.
 
-# Changelog
 
 ## 0.3.1 — 2026-07-21
 

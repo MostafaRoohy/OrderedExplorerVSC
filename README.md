@@ -6,24 +6,24 @@ The order is stored in the saved `.code-workspace` file under its `settings` obj
 
 ## Install a prebuilt VSIX
 
-When you already have `ordered-explorer-0.3.1.vsix`, install it from VS Code:
+When you already have `ordered-explorer-0.5.0.vsix`, install it from VS Code:
 
 1. Open **Extensions**.
 2. Open the `...` menu.
 3. Choose **Install from VSIX...**.
-4. Select `ordered-explorer-0.3.1.vsix`.
+4. Select `ordered-explorer-0.5.0.vsix`.
 5. Reload VS Code.
 
 Or install it from a terminal opened in the directory containing the VSIX:
 
 ```bash
-code --install-extension ./ordered-explorer-0.3.1.vsix
+code --install-extension ./ordered-explorer-0.5.0.vsix
 ```
 
 Use `--force` when reinstalling the same extension version after rebuilding it:
 
 ```bash
-code --install-extension ./ordered-explorer-0.3.1.vsix --force
+code --install-extension ./ordered-explorer-0.5.0.vsix --force
 ```
 
 ## Build a VSIX from source
@@ -60,13 +60,13 @@ After the command succeeds, the generated package appears in the repository root
 
 ```text
 OrderedExplorerVSC/
-└── ordered-explorer-0.3.1.vsix
+└── ordered-explorer-0.5.0.vsix
 ```
 
 Install that generated package with:
 
 ```bash
-code --install-extension ./ordered-explorer-0.3.1.vsix
+code --install-extension ./ordered-explorer-0.5.0.vsix
 ```
 
 ### Build from a downloaded source archive
@@ -78,7 +78,7 @@ npm ci
 npm run package:vsix
 ```
 
-The result is the same `ordered-explorer-0.3.1.vsix` file in the project root.
+The result is the same `ordered-explorer-0.5.0.vsix` file in the project root.
 
 ### What the packaging command does
 
@@ -171,10 +171,10 @@ On Linux and Windows, you can also enable the VS Code command-line launcher and 
 
 #### Reinstalling does not appear to change the extension
 
-When rebuilding version `0.3.1`, force the reinstall and reload VS Code:
+When rebuilding version `0.5.0`, force the reinstall and reload VS Code:
 
 ```bash
-code --install-extension ./ordered-explorer-0.3.1.vsix --force
+code --install-extension ./ordered-explorer-0.5.0.vsix --force
 ```
 
 For distributed releases, increment the `version` field in `package.json` before packaging a new release.
@@ -344,6 +344,37 @@ Ordered Explorer contributes one **Collapse All** button:
 - Workspace roots are immediately restored to their expanded state.
 - There is no Expand All action because recursively opening every directory is visually chaotic and unnecessarily expensive.
 
+
+## Context-menu appearance
+
+Ordered Explorer groups related right-click actions into three submenus by default:
+
+```text
+📋 Clipboard & AI
+↕️ Custom Order
+🛠️ Manage
+```
+
+Emoji-prefixed labels are also enabled by default. Both presentation choices are independently configurable:
+
+```jsonc
+{
+    "orderedExplorer.contextMenu.useSubmenus": true,
+    "orderedExplorer.contextMenu.useEmojiTitles": true
+}
+```
+
+The four supported combinations are:
+
+| Submenus | Emoji titles | Result |
+|---:|---:|---|
+| On | On | Grouped menu with emoji labels |
+| On | Off | Grouped menu with plain labels |
+| Off | On | Flat menu with emoji-prefixed commands |
+| Off | Off | Flat menu with plain command labels |
+
+Changing either setting updates the menu without recompiling the extension.
+
 ## Implemented behaviors
 
 - Native VS Code tree rendering, themes, extension icon, file icons, keyboard navigation and multi-selection.
@@ -402,6 +433,8 @@ Right-click a directory and use:
 | `orderedExplorer.confirmPermanentDelete` | Confirm before permanent deletion |
 | `orderedExplorer.confirmDelete` | Deprecated shared fallback for older workspaces |
 | `orderedExplorer.followSymlinks` | Expand directory symbolic links |
+| `orderedExplorer.contextMenu.useSubmenus` | Group related right-click actions into submenus |
+| `orderedExplorer.contextMenu.useEmojiTitles` | Prefix right-click menu titles with emoji symbols |
 
 ## Development notes
 
@@ -415,7 +448,7 @@ VS Code does not expose a supported API for replacing `workbench.explorer.fileVi
 
 ## AI context copying
 
-Right-click a file, folder, workspace root, or multi-selection inside **Ordered Explorer** and choose:
+Right-click a file, folder, workspace root, or multi-selection inside **Ordered Explorer**. With the default submenu layout, open **📋 Clipboard & AI**, then choose:
 
 - **Copy to Clipboard (Copy4AI)** — copies the selected project structure followed by the contents of readable text files in Markdown code blocks.
 - **Copy Project Structure (Copy4AI)** — copies only the selected structure as a text tree.
@@ -423,3 +456,19 @@ Right-click a file, folder, workspace root, or multi-selection inside **Ordered 
 The generated tree follows Ordered Explorer's authoritative custom order and respects the files currently visible through its exclusion rules. Binary files are represented by a placeholder, and files larger than 1 MiB are omitted from content copying.
 
 These focused commands are independently implemented in Ordered Explorer and are inspired by the MIT-licensed [Copy4AI](https://github.com/LeonKohli/copy4ai) extension.
+
+
+## Third-party notices
+
+Ordered Explorer is implemented against the public Visual Studio Code Extension API.
+
+Visual Studio Code is Copyright (c) Microsoft Corporation and is distributed under the MIT License in its open-source repository. No private Visual Studio Code Workbench modules are bundled in this extension.
+
+The project uses `minimatch`, `esbuild`, TypeScript, Vitest, and `@vscode/vsce` under their respective licenses as declared in `package-lock.json` and their package metadata.
+
+### Copy4AI inspiration
+
+The context-menu labels and user-facing behavior of the AI-copying commands were inspired by [Copy4AI](https://github.com/LeonKohli/copy4ai) by Leon Kohli, licensed under the MIT License.
+
+Ordered Explorer's implementation was written independently and does not bundle Copy4AI.
+

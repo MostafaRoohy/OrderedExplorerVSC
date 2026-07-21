@@ -43,3 +43,21 @@ Operations initiated through Ordered Explorer update the workspace ordering:
 - Duplicate inserts the copy after the original when possible.
 
 External filesystem operations are detected and refreshed, but an external rename cannot always be distinguished from an unrelated delete plus create. Stale names remain harmless and can be removed with **Clean Stale Order Entries**.
+
+## Context-menu presentation
+
+The right-click menu has two independent presentation settings:
+
+```jsonc
+{
+    "orderedExplorer.contextMenu.useSubmenus": true,
+    "orderedExplorer.contextMenu.useEmojiTitles": true
+}
+```
+
+- `useSubmenus` groups related commands under **Clipboard & AI**, **Custom Order**, and **Manage**.
+- `useEmojiTitles` prefixes both direct command labels and submenu labels with emoji symbols.
+- Disabling both settings restores a flat, plain-text context menu.
+
+These are window-scoped VS Code settings and may be stored in user settings or workspace settings.
+

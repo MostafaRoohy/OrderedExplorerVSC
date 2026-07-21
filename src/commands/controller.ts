@@ -7,6 +7,37 @@ import { AiCopyService } from '../services/aiCopy';
 import { FileOperationsService } from '../services/fileOperations';
 import { mayRevealTree } from '../services/revealPolicy';
 
+const MENU_EMOJI_ALIASES: Readonly<Record<string, string>> = {
+    'orderedExplorer.menuEmoji.openToSide':            'orderedExplorer.openToSide',
+    'orderedExplorer.menuEmoji.newFile':               'orderedExplorer.newFile',
+    'orderedExplorer.menuEmoji.newFolder':             'orderedExplorer.newFolder',
+    'orderedExplorer.menuEmoji.rename':                'orderedExplorer.rename',
+    'orderedExplorer.menuEmoji.delete':                'orderedExplorer.delete',
+    'orderedExplorer.menuEmoji.deletePermanently':     'orderedExplorer.deletePermanently',
+    'orderedExplorer.menuEmoji.duplicate':             'orderedExplorer.duplicate',
+    'orderedExplorer.menuEmoji.move':                  'orderedExplorer.move',
+    'orderedExplorer.menuEmoji.copy':                  'orderedExplorer.copy',
+    'orderedExplorer.menuEmoji.cut':                   'orderedExplorer.cut',
+    'orderedExplorer.menuEmoji.paste':                 'orderedExplorer.paste',
+    'orderedExplorer.menuEmoji.copyForAI':             'orderedExplorer.copyForAI',
+    'orderedExplorer.menuEmoji.copyProjectStructure':  'orderedExplorer.copyProjectStructure',
+    'orderedExplorer.menuEmoji.copyPath':              'orderedExplorer.copyPath',
+    'orderedExplorer.menuEmoji.copyRelativePath':      'orderedExplorer.copyRelativePath',
+    'orderedExplorer.menuEmoji.revealInOS':            'orderedExplorer.revealInOS',
+    'orderedExplorer.menuEmoji.openTerminal':          'orderedExplorer.openTerminal',
+    'orderedExplorer.menuEmoji.compareSelected':       'orderedExplorer.compareSelected',
+    'orderedExplorer.menuEmoji.moveUp':                'orderedExplorer.moveUp',
+    'orderedExplorer.menuEmoji.moveDown':              'orderedExplorer.moveDown',
+    'orderedExplorer.menuEmoji.moveToTop':             'orderedExplorer.moveToTop',
+    'orderedExplorer.menuEmoji.moveToBottom':          'orderedExplorer.moveToBottom',
+    'orderedExplorer.menuEmoji.placeBefore':           'orderedExplorer.placeBefore',
+    'orderedExplorer.menuEmoji.placeAfter':            'orderedExplorer.placeAfter',
+    'orderedExplorer.menuEmoji.removeCustomPosition':  'orderedExplorer.removeCustomPosition',
+    'orderedExplorer.menuEmoji.captureCurrentOrder':   'orderedExplorer.captureCurrentOrder',
+    'orderedExplorer.menuEmoji.resetDirectoryOrder':   'orderedExplorer.resetDirectoryOrder',
+    'orderedExplorer.menuEmoji.cleanStaleOrder':       'orderedExplorer.cleanStaleOrder',
+};
+
 export class CommandController implements vscode.Disposable {
     private readonly disposables: vscode.Disposable[] = [];
     private isCollapsingAll = false;
@@ -93,6 +124,10 @@ export class CommandController implements vscode.Disposable {
             }
         });
 
+        for (const [alias, target] of Object.entries(MENU_EMOJI_ALIASES)) {
+            this.registerAlias(alias, target);
+        }
+
         this.disposables.push(
             this.treeView.onDidCollapseElement(({ element }) => {
                 if (element.isWorkspaceRoot && !this.isCollapsingAll) {
@@ -158,6 +193,14 @@ export class CommandController implements vscode.Disposable {
                     void vscode.window.showErrorMessage(`${command}: ${message}`);
                 }
             },
+        ));
+    }
+
+    private registerAlias(alias: string, target: string): void {
+        this.register(alias, (item, selected) => vscode.commands.executeCommand(
+            target,
+            item,
+            selected,
         ));
     }
 
