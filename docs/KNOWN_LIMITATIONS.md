@@ -24,7 +24,7 @@ The public drag/drop API reports the target tree item but not whether the pointe
 
 ## Compact folders and file nesting
 
-Version 0.5.0 does not compress one-child folder chains or apply `explorer.fileNesting.patterns`. Implementing these in a custom tree is possible, but it changes parentage, selection, operation targets and reveal behavior. They are intentionally excluded until they can be added without weakening file-operation correctness.
+Version 0.7.0 does not compress one-child folder chains or apply `explorer.fileNesting.patterns`. Implementing these in a custom tree is possible, but it changes parentage, selection, operation targets and reveal behavior. They are intentionally excluded until they can be added without weakening file-operation correctness.
 
 ## Extension-managed clipboard
 

@@ -42,7 +42,7 @@ Operations initiated through Ordered Explorer update the workspace ordering:
 - Delete removes the entry and descendant directory maps.
 - Duplicate inserts the copy after the original when possible.
 
-External filesystem operations are detected and refreshed, but an external rename cannot always be distinguished from an unrelated delete plus create. Stale names remain harmless and can be removed with **Clean Stale Order Entries**.
+External filesystem operations are detected and refreshed, but an external rename cannot always be distinguished from an unrelated delete plus create. Stale names remain harmless and may be removed manually from the workspace ordering settings.
 
 ## Context-menu presentation
 
@@ -55,7 +55,7 @@ The right-click menu has two independent presentation settings:
 }
 ```
 
-- `useSubmenus` groups related commands under **ClipBoard**, **Custom Order**, and **Manage**.
+- `useSubmenus` groups related commands under **Open In**, **Clipboard**, and **Order**.
 - `useEmojiTitles` prefixes both direct command labels and submenu labels with emoji symbols.
 - Disabling both settings restores a flat, plain-text context menu.
 

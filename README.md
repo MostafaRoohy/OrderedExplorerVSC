@@ -6,24 +6,24 @@ The order is stored in the saved `.code-workspace` file under its `settings` obj
 
 ## Install a prebuilt VSIX
 
-When you already have `ordered-explorer-0.5.0.vsix`, install it from VS Code:
+When you already have `ordered-explorer-0.7.0.vsix`, install it from VS Code:
 
 1. Open **Extensions**.
 2. Open the `...` menu.
 3. Choose **Install from VSIX...**.
-4. Select `ordered-explorer-0.5.0.vsix`.
+4. Select `ordered-explorer-0.7.0.vsix`.
 5. Reload VS Code.
 
 Or install it from a terminal opened in the directory containing the VSIX:
 
 ```bash
-code --install-extension ./ordered-explorer-0.5.0.vsix
+code --install-extension ./ordered-explorer-0.7.0.vsix
 ```
 
 Use `--force` when reinstalling the same extension version after rebuilding it:
 
 ```bash
-code --install-extension ./ordered-explorer-0.5.0.vsix --force
+code --install-extension ./ordered-explorer-0.7.0.vsix --force
 ```
 
 ## Build a VSIX from source
@@ -60,13 +60,13 @@ After the command succeeds, the generated package appears in the repository root
 
 ```text
 OrderedExplorerVSC/
-└── ordered-explorer-0.5.0.vsix
+└── ordered-explorer-0.7.0.vsix
 ```
 
 Install that generated package with:
 
 ```bash
-code --install-extension ./ordered-explorer-0.5.0.vsix
+code --install-extension ./ordered-explorer-0.7.0.vsix
 ```
 
 ### Build from a downloaded source archive
@@ -78,7 +78,7 @@ npm ci
 npm run package:vsix
 ```
 
-The result is the same `ordered-explorer-0.5.0.vsix` file in the project root.
+The result is the same `ordered-explorer-0.7.0.vsix` file in the project root.
 
 ### What the packaging command does
 
@@ -171,10 +171,10 @@ On Linux and Windows, you can also enable the VS Code command-line launcher and 
 
 #### Reinstalling does not appear to change the extension
 
-When rebuilding version `0.5.0`, force the reinstall and reload VS Code:
+When rebuilding version `0.7.0`, force the reinstall and reload VS Code:
 
 ```bash
-code --install-extension ./ordered-explorer-0.5.0.vsix --force
+code --install-extension ./ordered-explorer-0.7.0.vsix --force
 ```
 
 For distributed releases, increment the `version` field in `package.json` before packaging a new release.
@@ -347,15 +347,7 @@ Ordered Explorer contributes one **Collapse All** button:
 
 ## Context-menu appearance
 
-Ordered Explorer groups related right-click actions into three submenus by default:
-
-```text
-📋 ClipBoard
-↕️ Custom Order
-🛠️ Manage
-```
-
-Emoji-prefixed labels are also enabled by default. Both presentation choices are independently configurable:
+Ordered Explorer uses submenus and emoji-prefixed labels by default:
 
 ```jsonc
 {
@@ -364,7 +356,96 @@ Emoji-prefixed labels are also enabled by default. Both presentation choices are
 }
 ```
 
-The four supported combinations are:
+With submenus enabled, the right-click menu is organized as:
+
+```text
+↗️ Open to the Side
+⚖️ Git Diff Selected
+
+────────────────────────
+
+📄 New File...
+📁 New Folder...
+✏️ Rename...
+📑 Duplicate
+🚚 Move To...
+🗑️ Delete
+⚠️ Delete Permanently
+
+────────────────────────
+
+🛠️ Open In  ›
+    📂 Open in File Explorer
+    💻 Open in Integrated Terminal
+
+────────────────────────
+
+📋 Clipboard  ›
+    📋 Copy
+    ✂️ Cut
+    📥 Paste
+    🔗 Copy Absolute Path
+    🧭 Copy Relative Path
+    🤖 Copy Content to Clipboard
+    🌳 Copy Hierarchy to Clipboard
+
+────────────────────────
+
+↕️ Order  ›
+    ⬆️ Move Up
+    ⬇️ Move Down
+    ⏫ Move to Top
+    ⏬ Move to Bottom
+    ⬅️ Place Before...
+    ➡️ Place After...
+    🧹 Remove Custom Position
+```
+
+With submenus disabled, the same commands use a flat five-section layout:
+
+```text
+↗️ Open to the Side
+
+────────────────────────
+
+📄 New File...
+📁 New Folder...
+✏️ Rename...
+📑 Duplicate
+🚚 Move To...
+🗑️ Delete
+⚠️ Delete Permanently
+⚖️ Git Diff Selected
+
+────────────────────────
+
+📋 Copy
+✂️ Cut
+📥 Paste
+🔗 Copy Absolute Path
+🧭 Copy Relative Path
+🤖 Copy Content to Clipboard
+🌳 Copy Hierarchy to Clipboard
+
+────────────────────────
+
+📂 Open in File Explorer
+💻 Open in Integrated Terminal
+
+────────────────────────
+
+⬆️ Move Up
+⬇️ Move Down
+⏫ Move to Top
+⏬ Move to Bottom
+⬅️ Place Before...
+➡️ Place After...
+🧹 Remove Custom Position
+```
+
+VS Code does not expose blank spacer rows for native context menus, so the flat layout uses separators only at major section boundaries.
+
+The four supported combinations remain:
 
 | Submenus | Emoji titles | Result |
 |---:|---:|---|
@@ -391,31 +472,24 @@ Changing either setting updates the menu without recompiling the extension.
 - Copy absolute and workspace-relative paths.
 - Reveal in operating-system file manager.
 - Open folder in integrated terminal.
-- Compare two selected files.
+- Git diff two selected files.
 - Drag files into folders.
 - Drag a file before another file in the same directory to reorder it.
 - Move up/down/top/bottom and place-before/after commands.
-- Capture, reset and clean directory orders.
 - Automatic order metadata updates after extension-driven rename, move and delete operations.
 - Local, Remote SSH, WSL, Dev Container and virtual-filesystem access through `vscode.workspace.fs`.
 
 ## Reordering commands
 
-Right-click an item and use:
+Right-click a file or directory and open **Order** when submenus are enabled:
 
-- **Move Up in Custom Order**
-- **Move Down in Custom Order**
-- **Move to Top of Custom Order**
-- **Move to Bottom of Custom Order**
+- **Move Up**
+- **Move Down**
+- **Move to Top**
+- **Move to Bottom**
 - **Place Before...**
 - **Place After...**
 - **Remove Custom Position**
-
-Right-click a directory and use:
-
-- **Capture Current Directory Order**
-- **Reset Directory Order**
-- **Clean Stale Order Entries**
 
 `Alt+Up` and `Alt+Down` work while the Ordered Explorer tree has focus.
 
@@ -448,10 +522,10 @@ VS Code does not expose a supported API for replacing `workbench.explorer.fileVi
 
 ## AI context copying
 
-Right-click a file, folder, workspace root, or multi-selection inside **Ordered Explorer**. With the default submenu layout, open **📋 ClipBoard**, then choose:
+Right-click a file, folder, workspace root, or multi-selection inside **Ordered Explorer**. With the default submenu layout, open **📋 Clipboard**, then choose:
 
-- **Copy to Clipboard (Copy4AI)** — copies the selected project structure followed by the contents of readable text files in Markdown code blocks.
-- **Copy Project Structure (Copy4AI)** — copies only the selected structure as a text tree.
+- **Copy Content to Clipboard** — copies the selected project structure followed by the contents of readable text files in Markdown code blocks.
+- **Copy Hierarchy to Clipboard** — copies only the selected structure as a text tree.
 
 The generated tree follows Ordered Explorer's authoritative custom order and respects the files currently visible through its exclusion rules. Binary files are represented by a placeholder, and files larger than 1 MiB are omitted from content copying.
 

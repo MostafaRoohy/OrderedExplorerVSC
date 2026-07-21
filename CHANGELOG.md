@@ -1,6 +1,16 @@
 # Changelog
 
-## 0.6.0
+## 0.7.0 — 2026-07-21
+
+- Reorganize the submenu layout into direct open/diff actions, filesystem actions, Open In, Clipboard, and Order sections.
+- Reorganize the flat layout into five major separator groups without unsupported spacer rows.
+- Rename Manage to Open In, ClipBoard to Clipboard, and Custom Order to Order.
+- Rename Copy to Clipboard (Copy4AI) to Copy Content to Clipboard.
+- Rename Copy Project Structure (Copy4AI) to Copy Hierarchy to Clipboard.
+- Shorten custom-order command labels to Move Up, Move Down, Move to Top, and Move to Bottom.
+- Use the requested balance-scale emoji for Git Diff Selected.
+
+## 0.6.0 — 2026-07-21
 
 - Reorder the item context menu into Open, New, Manage, workspace actions, ClipBoard, and Custom Order sections.
 - Rename Clipboard & AI to ClipBoard.
@@ -18,7 +28,7 @@
 - Add manifest tests for all context-menu presentation modes.
 - Move third-party notices into `README.md` and remove the standalone notices file.
 
-## 0.4.0
+## 0.4.0 — 2026-07-21
 
 - Add **Copy to Clipboard (Copy4AI)** to Ordered Explorer item context menus.
 - Add **Copy Project Structure (Copy4AI)** to Ordered Explorer item context menus.

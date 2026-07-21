@@ -29,6 +29,26 @@ const manifest = JSON.parse(readFileSync(
     'utf8',
 )) as PackageManifest;
 
+function commandsFor(
+    menu: string,
+    useSubmenus: boolean,
+    useEmojiTitles: boolean,
+): string[] {
+    return (manifest.contributes.menus[menu] ?? [])
+        .filter((entry) => {
+            const when = entry.when ?? '';
+            const submenuMatches = useSubmenus
+                ? when.includes('&& config.orderedExplorer.contextMenu.useSubmenus')
+                : when.includes('&& !config.orderedExplorer.contextMenu.useSubmenus');
+            const emojiMatches = useEmojiTitles
+                ? when.includes('&& config.orderedExplorer.contextMenu.useEmojiTitles')
+                : when.includes('&& !config.orderedExplorer.contextMenu.useEmojiTitles');
+            return submenuMatches && emojiMatches;
+        })
+        .sort((left, right) => (left.group ?? '').localeCompare(right.group ?? ''))
+        .map((entry) => entry.command ?? `submenu:${entry.submenu}`);
+}
+
 describe('context-menu manifest', () => {
     it('contributes enabled-by-default submenu and emoji settings', () => {
         const properties = manifest.contributes.configuration.properties;
@@ -43,17 +63,19 @@ describe('context-menu manifest', () => {
         });
     });
 
-    it('provides plain and emoji submenu labels', () => {
+    it('provides the approved plain and emoji submenu labels', () => {
         const labels = new Map(
             manifest.contributes.submenus.map((submenu) => [submenu.id, submenu.label]),
         );
 
-        expect(labels.get('orderedExplorer.submenu.clipboardAi')).toBe('ClipBoard');
-        expect(labels.get('orderedExplorer.submenu.clipboardAiEmoji')).toBe('📋 ClipBoard');
-        expect(labels.get('orderedExplorer.submenu.customOrder')).toBe('Custom Order');
-        expect(labels.get('orderedExplorer.submenu.customOrderEmoji')).toBe('↕️ Custom Order');
-        expect(labels.get('orderedExplorer.submenu.manage')).toBe('Manage');
-        expect(labels.get('orderedExplorer.submenu.manageEmoji')).toBe('🛠️ Manage');
+        expect(labels).toEqual(new Map([
+            ['orderedExplorer.submenu.openIn', 'Open In'],
+            ['orderedExplorer.submenu.openInEmoji', '🛠️ Open In'],
+            ['orderedExplorer.submenu.clipboard', 'Clipboard'],
+            ['orderedExplorer.submenu.clipboardEmoji', '📋 Clipboard'],
+            ['orderedExplorer.submenu.order', 'Order'],
+            ['orderedExplorer.submenu.orderEmoji', '↕️ Order'],
+        ]));
     });
 
     it('switches context-menu presentation through config when clauses', () => {
@@ -70,21 +92,38 @@ describe('context-menu manifest', () => {
             when.includes('!config.orderedExplorer.contextMenu.useEmojiTitles'))).toBe(true);
     });
 
+    it('uses the approved submenu top-level order', () => {
+        const plain = commandsFor('view/item/context', true, false);
 
-    it('uses the requested submenu command order and removes obsolete manage commands', () => {
-        const commandIds = new Set(
-            manifest.contributes.commands.map((command) => command.command),
-        );
-        const manage = manifest.contributes.menus['orderedExplorer.submenu.manage'] ?? [];
-        const clipboard = manifest.contributes.menus['orderedExplorer.submenu.clipboardAi'] ?? [];
-        const customOrder = manifest.contributes.menus['orderedExplorer.submenu.customOrder'] ?? [];
-
-        expect(manage.map((entry) => entry.command)).toEqual([
-            'orderedExplorer.revealInOS',
-            'orderedExplorer.openTerminal',
+        expect(plain).toEqual([
+            'orderedExplorer.openToSide',
             'orderedExplorer.compareSelected',
+            'orderedExplorer.newFile',
+            'orderedExplorer.newFolder',
+            'orderedExplorer.rename',
+            'orderedExplorer.duplicate',
+            'orderedExplorer.move',
+            'orderedExplorer.delete',
+            'orderedExplorer.deletePermanently',
+            'submenu:orderedExplorer.submenu.openIn',
+            'submenu:orderedExplorer.submenu.clipboard',
+            'submenu:orderedExplorer.submenu.order',
         ]);
-        expect(clipboard.map((entry) => entry.command)).toEqual([
+    });
+
+    it('uses the approved flat-menu order', () => {
+        const plain = commandsFor('view/item/context', false, false);
+
+        expect(plain).toEqual([
+            'orderedExplorer.openToSide',
+            'orderedExplorer.newFile',
+            'orderedExplorer.newFolder',
+            'orderedExplorer.rename',
+            'orderedExplorer.duplicate',
+            'orderedExplorer.move',
+            'orderedExplorer.delete',
+            'orderedExplorer.deletePermanently',
+            'orderedExplorer.compareSelected',
             'orderedExplorer.copy',
             'orderedExplorer.cut',
             'orderedExplorer.paste',
@@ -92,8 +131,8 @@ describe('context-menu manifest', () => {
             'orderedExplorer.copyRelativePath',
             'orderedExplorer.copyForAI',
             'orderedExplorer.copyProjectStructure',
-        ]);
-        expect(customOrder.map((entry) => entry.command)).toEqual([
+            'orderedExplorer.revealInOS',
+            'orderedExplorer.openTerminal',
             'orderedExplorer.moveUp',
             'orderedExplorer.moveDown',
             'orderedExplorer.moveToTop',
@@ -102,10 +141,52 @@ describe('context-menu manifest', () => {
             'orderedExplorer.placeAfter',
             'orderedExplorer.removeCustomPosition',
         ]);
+    });
 
-        expect(commandIds.has('orderedExplorer.captureCurrentOrder')).toBe(false);
-        expect(commandIds.has('orderedExplorer.resetDirectoryOrder')).toBe(false);
-        expect(commandIds.has('orderedExplorer.cleanStaleOrder')).toBe(false);
+    it('uses the approved command order inside each submenu', () => {
+        expect((manifest.contributes.menus['orderedExplorer.submenu.openIn'] ?? [])
+            .map((entry) => entry.command)).toEqual([
+            'orderedExplorer.revealInOS',
+            'orderedExplorer.openTerminal',
+        ]);
+        expect((manifest.contributes.menus['orderedExplorer.submenu.clipboard'] ?? [])
+            .map((entry) => entry.command)).toEqual([
+            'orderedExplorer.copy',
+            'orderedExplorer.cut',
+            'orderedExplorer.paste',
+            'orderedExplorer.copyPath',
+            'orderedExplorer.copyRelativePath',
+            'orderedExplorer.copyForAI',
+            'orderedExplorer.copyProjectStructure',
+        ]);
+        expect((manifest.contributes.menus['orderedExplorer.submenu.order'] ?? [])
+            .map((entry) => entry.command)).toEqual([
+            'orderedExplorer.moveUp',
+            'orderedExplorer.moveDown',
+            'orderedExplorer.moveToTop',
+            'orderedExplorer.moveToBottom',
+            'orderedExplorer.placeBefore',
+            'orderedExplorer.placeAfter',
+            'orderedExplorer.removeCustomPosition',
+        ]);
+    });
+
+    it('uses the approved concise command labels', () => {
+        const titles = new Map(
+            manifest.contributes.commands.map((command) => [command.command, command.title]),
+        );
+
+        expect(titles.get('orderedExplorer.copyForAI')).toBe('Copy Content to Clipboard');
+        expect(titles.get('orderedExplorer.copyProjectStructure')).toBe(
+            'Copy Hierarchy to Clipboard',
+        );
+        expect(titles.get('orderedExplorer.moveUp')).toBe('Move Up');
+        expect(titles.get('orderedExplorer.moveDown')).toBe('Move Down');
+        expect(titles.get('orderedExplorer.moveToTop')).toBe('Move to Top');
+        expect(titles.get('orderedExplorer.moveToBottom')).toBe('Move to Bottom');
+        expect(titles.get('orderedExplorer.menuEmoji.compareSelected')).toBe(
+            '⚖️ Git Diff Selected',
+        );
     });
 
     it('registers every emoji presentation alias in the command controller', () => {
