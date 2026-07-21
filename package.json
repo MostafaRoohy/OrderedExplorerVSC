@@ -2,7 +2,7 @@
   "name": "ordered-explorer",
   "displayName": "Ordered Explorer",
   "description": "A native-looking workspace explorer with authoritative custom file ordering stored in .code-workspace settings.",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "publisher": "mostafaroohy-local",
   "license": "MIT",
   "engines": {

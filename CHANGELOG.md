@@ -1,6 +1,12 @@
-# Changelog
+# Change Log
 
-## 0.9.0
+## 1.0.0
+
+- Promote Ordered Explorer to its first stable release.
+- Preserve the verified v0.9.0 feature set and settings schema.
+- Package the extension as a production-ready VSIX for GitHub Release distribution.
+
+## 0.9.0 — 2026-07-21
 
 - Added emoji prefixes to the New, Delete, Open In, Path, and Content submenu headings.
 - Renamed flat-menu Delete to Trash in both plain and emoji modes.
