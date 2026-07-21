@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.9.0
+
+- Added emoji prefixes to the New, Delete, Open In, Path, and Content submenu headings.
+- Renamed flat-menu Delete to Trash in both plain and emoji modes.
+- Reorganized all extension settings into explicit Ordering, Behavior, Deletion, and Context Menu sections in VS Code Settings.
+- Added Settings UI metadata, enum descriptions, and tests proving all active settings remain discoverable.
+
 ## 0.8.0 — 2026-07-21
 
 - Move Open to the Side, Git Diff Selected, and Rename to the first direct-action group.

@@ -15,12 +15,17 @@ type PackageManifest = {
         commands: Array<{ command: string; title: string }>;
         submenus: Array<{ id: string; label: string }>;
         menus: Record<string, MenuEntry[]>;
-        configuration: {
+        configuration: Array<{
+            title: string;
+            order: number;
             properties: Record<string, {
                 type: string;
                 default: unknown;
+                scope?: string;
+                markdownDescription?: string;
+                deprecationMessage?: string;
             }>;
-        };
+        }>;
     };
 };
 
@@ -49,6 +54,18 @@ function commandsFor(
         .map((entry) => entry.command ?? `submenu:${entry.submenu}`);
 }
 
+function configurationProperties(): Record<string, {
+    type: string;
+    default: unknown;
+    scope?: string;
+    markdownDescription?: string;
+    deprecationMessage?: string;
+}> {
+    return Object.assign({}, ...manifest.contributes.configuration.map(
+        (section) => section.properties,
+    ));
+}
+
 function submenuCommands(menu: string): string[] {
     return (manifest.contributes.menus[menu] ?? [])
         .sort((left, right) => (left.group ?? '').localeCompare(right.group ?? ''))
@@ -57,7 +74,7 @@ function submenuCommands(menu: string): string[] {
 
 describe('context-menu manifest', () => {
     it('contributes enabled-by-default submenu and emoji settings', () => {
-        const properties = manifest.contributes.configuration.properties;
+        const properties = configurationProperties();
 
         expect(properties['orderedExplorer.contextMenu.useSubmenus']).toMatchObject({
             type: 'boolean',
@@ -76,20 +93,73 @@ describe('context-menu manifest', () => {
 
         expect(labels).toEqual(new Map([
             ['orderedExplorer.submenu.new', 'New...'],
-            ['orderedExplorer.submenu.newEmoji', 'New...'],
+            ['orderedExplorer.submenu.newEmoji', '🆕 New...'],
             ['orderedExplorer.submenu.delete', 'Delete...'],
-            ['orderedExplorer.submenu.deleteEmoji', 'Delete...'],
+            ['orderedExplorer.submenu.deleteEmoji', '🗑️ Delete...'],
             ['orderedExplorer.submenu.openIn', 'Open In...'],
-            ['orderedExplorer.submenu.openInEmoji', 'Open In...'],
+            ['orderedExplorer.submenu.openInEmoji', '📂 Open In...'],
             ['orderedExplorer.submenu.clipboard', 'Clipboard'],
             ['orderedExplorer.submenu.clipboardEmoji', '📋 Clipboard'],
             ['orderedExplorer.submenu.path', 'Path'],
-            ['orderedExplorer.submenu.pathEmoji', 'Path'],
+            ['orderedExplorer.submenu.pathEmoji', '🔗 Path'],
             ['orderedExplorer.submenu.content', 'Content'],
-            ['orderedExplorer.submenu.contentEmoji', 'Content'],
+            ['orderedExplorer.submenu.contentEmoji', '🤖 Content'],
             ['orderedExplorer.submenu.order', 'Order'],
             ['orderedExplorer.submenu.orderEmoji', '↕️ Order'],
         ]));
+    });
+
+    it('registers every active setting in grouped VS Code Settings UI sections', () => {
+        const sections = manifest.contributes.configuration;
+        const properties = configurationProperties();
+
+        expect(sections.map((section) => section.title)).toEqual([
+            'Ordered Explorer: Ordering',
+            'Ordered Explorer: Behavior',
+            'Ordered Explorer: Deletion',
+            'Ordered Explorer: Context Menu',
+        ]);
+        expect(Object.keys(properties).sort()).toEqual([
+            'orderedExplorer.autoReveal',
+            'orderedExplorer.confirmDelete',
+            'orderedExplorer.confirmPermanentDelete',
+            'orderedExplorer.confirmTrashDelete',
+            'orderedExplorer.contextMenu.useEmojiTitles',
+            'orderedExplorer.contextMenu.useSubmenus',
+            'orderedExplorer.directoryOrder',
+            'orderedExplorer.fallbackSort',
+            'orderedExplorer.followSymlinks',
+            'orderedExplorer.order',
+            'orderedExplorer.roots',
+            'orderedExplorer.showExcludedFiles',
+        ]);
+        const legacy = properties['orderedExplorer.confirmDelete']!;
+        const active = Object.entries(properties)
+            .filter(([name]) => name !== 'orderedExplorer.confirmDelete')
+            .map(([, property]) => property);
+        expect(active).toHaveLength(11);
+        for (const property of active) {
+            expect(property.scope).toBe('window');
+            expect(property.markdownDescription).toBeTruthy();
+            expect(property.deprecationMessage).toBeUndefined();
+        }
+        expect(legacy.deprecationMessage).toBeTruthy();
+    });
+
+    it('uses Trash in flat mode and emoji-prefixed submenu headings', () => {
+        const titles = new Map(manifest.contributes.commands.map(
+            (command) => [command.command, command.title],
+        ));
+        const labels = new Map(manifest.contributes.submenus.map(
+            (submenu) => [submenu.id, submenu.label],
+        ));
+        expect(titles.get('orderedExplorer.delete')).toBe('Trash');
+        expect(titles.get('orderedExplorer.menuEmoji.delete')).toBe('🗑️ Trash');
+        expect(labels.get('orderedExplorer.submenu.newEmoji')).toBe('🆕 New...');
+        expect(labels.get('orderedExplorer.submenu.deleteEmoji')).toBe('🗑️ Delete...');
+        expect(labels.get('orderedExplorer.submenu.openInEmoji')).toBe('📂 Open In...');
+        expect(labels.get('orderedExplorer.submenu.pathEmoji')).toBe('🔗 Path');
+        expect(labels.get('orderedExplorer.submenu.contentEmoji')).toBe('🤖 Content');
     });
 
     it('switches context-menu presentation through config when clauses', () => {

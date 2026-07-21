@@ -2,7 +2,7 @@
   "name": "ordered-explorer",
   "displayName": "Ordered Explorer",
   "description": "A native-looking workspace explorer with authoritative custom file ordering stored in .code-workspace settings.",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "publisher": "mostafaroohy-local",
   "license": "MIT",
   "engines": {
@@ -103,7 +103,7 @@
       },
       {
         "command": "orderedExplorer.delete",
-        "title": "Delete",
+        "title": "Trash",
         "category": "Ordered Explorer"
       },
       {
@@ -225,7 +225,7 @@
       },
       {
         "command": "orderedExplorer.menuEmoji.delete",
-        "title": "🗑️ Delete",
+        "title": "🗑️ Trash",
         "category": "Ordered Explorer"
       },
       {
@@ -1157,122 +1157,174 @@
         "when": "focusedView == orderedExplorer.files"
       }
     ],
-    "configuration": {
-      "title": "Ordered Explorer",
-      "properties": {
-        "orderedExplorer.order": {
-          "type": "array",
-          "scope": "window",
-          "default": [
-            "*"
-          ],
-          "items": {
-            "type": "string"
-          },
-          "description": "Authoritative final order for direct children of a single workspace root. Use * for all unlisted entries. In multi-root workspaces, use orderedExplorer.roots."
-        },
-        "orderedExplorer.directoryOrder": {
-          "type": "object",
-          "scope": "window",
-          "default": {},
-          "additionalProperties": {
+    "configuration": [
+      {
+        "title": "Ordered Explorer: Ordering",
+        "order": 10,
+        "properties": {
+          "orderedExplorer.order": {
             "type": "array",
+            "scope": "window",
+            "default": [
+              "*"
+            ],
             "items": {
               "type": "string"
-            }
+            },
+            "description": "Authoritative final order for direct children of a single workspace root. Use * for all unlisted entries. In multi-root workspaces, use orderedExplorer.roots.",
+            "order": 10,
+            "markdownDescription": "Authoritative final order for direct children of a single workspace root. Use `*` for all unlisted entries."
           },
-          "description": "Authoritative final orders for nested directories. Keys are POSIX-style paths relative to the workspace root."
-        },
-        "orderedExplorer.roots": {
-          "type": "object",
-          "scope": "window",
-          "default": {},
-          "additionalProperties": {
+          "orderedExplorer.directoryOrder": {
             "type": "object",
-            "properties": {
-              "order": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "directoryOrder": {
-                "type": "object",
-                "additionalProperties": {
+            "scope": "window",
+            "default": {},
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Authoritative final orders for nested directories. Keys are POSIX-style paths relative to the workspace root.",
+            "order": 20,
+            "markdownDescription": "Authoritative final orders for nested directories. Keys are POSIX-style paths relative to the workspace root."
+          },
+          "orderedExplorer.roots": {
+            "type": "object",
+            "scope": "window",
+            "default": {},
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "order": {
                   "type": "array",
                   "items": {
                     "type": "string"
                   }
+                },
+                "directoryOrder": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
-            }
+            },
+            "description": "Per-root ordering for multi-root workspaces, keyed by workspace-folder name.",
+            "order": 30,
+            "markdownDescription": "Per-root ordering for multi-root workspaces, keyed by workspace-folder name."
           },
-          "description": "Per-root ordering for multi-root workspaces, keyed by workspace-folder name."
-        },
-        "orderedExplorer.fallbackSort": {
-          "type": "string",
-          "scope": "window",
-          "enum": [
-            "default",
-            "mixed",
-            "filesFirst",
-            "type",
-            "modified"
-          ],
-          "default": "default",
-          "description": "Sorting applied only to entries represented by * or otherwise unlisted."
-        },
-        "orderedExplorer.autoReveal": {
-          "type": "boolean",
-          "scope": "window",
-          "default": true,
-          "description": "Reveal the active editor file in Ordered Explorer."
-        },
-        "orderedExplorer.showExcludedFiles": {
-          "type": "boolean",
-          "scope": "window",
-          "default": false,
-          "description": "Show files excluded by files.exclude."
-        },
-        "orderedExplorer.followSymlinks": {
-          "type": "boolean",
-          "scope": "window",
-          "default": false,
-          "description": "Allow expanding directory symbolic links. Disabled by default to prevent recursive loops."
-        },
-        "orderedExplorer.confirmTrashDelete": {
-          "type": "boolean",
-          "scope": "window",
-          "default": true,
-          "description": "Ask for confirmation before moving resources to Trash. The confirmation dialog can disable future prompts."
-        },
-        "orderedExplorer.confirmPermanentDelete": {
-          "type": "boolean",
-          "scope": "window",
-          "default": true,
-          "description": "Ask for confirmation before permanently deleting resources. The confirmation dialog can disable future prompts."
-        },
-        "orderedExplorer.confirmDelete": {
-          "type": "boolean",
-          "scope": "window",
-          "default": true,
-          "description": "Legacy shared delete-confirmation setting. Use the separate Trash and permanent-delete settings instead.",
-          "deprecationMessage": "Use orderedExplorer.confirmTrashDelete and orderedExplorer.confirmPermanentDelete."
-        },
-        "orderedExplorer.contextMenu.useSubmenus": {
-          "type": "boolean",
-          "scope": "window",
-          "default": true,
-          "description": "Group related Ordered Explorer right-click actions into Open In, Clipboard, and Order submenus."
-        },
-        "orderedExplorer.contextMenu.useEmojiTitles": {
-          "type": "boolean",
-          "scope": "window",
-          "default": true,
-          "description": "Prefix Ordered Explorer right-click menu and submenu titles with emoji symbols. Disable for plain text labels."
+          "orderedExplorer.fallbackSort": {
+            "type": "string",
+            "scope": "window",
+            "enum": [
+              "default",
+              "mixed",
+              "filesFirst",
+              "type",
+              "modified"
+            ],
+            "default": "default",
+            "description": "Sorting applied only to entries represented by * or otherwise unlisted.",
+            "order": 40,
+            "markdownDescription": "Sorting applied only to entries represented by `*` or otherwise unlisted.",
+            "enumDescriptions": [
+              "Folders first, then files, using natural name sorting.",
+              "Files and folders mixed together using natural name sorting.",
+              "Files first, then folders, using natural name sorting.",
+              "Sort by file extension/type, then by name.",
+              "Sort by modified time."
+            ]
+          }
+        }
+      },
+      {
+        "title": "Ordered Explorer: Behavior",
+        "order": 20,
+        "properties": {
+          "orderedExplorer.autoReveal": {
+            "type": "boolean",
+            "scope": "window",
+            "default": true,
+            "description": "Reveal the active editor file in Ordered Explorer.",
+            "order": 10,
+            "markdownDescription": "Reveal the active editor file while the Ordered Explorer view is already visible."
+          },
+          "orderedExplorer.showExcludedFiles": {
+            "type": "boolean",
+            "scope": "window",
+            "default": false,
+            "description": "Show files excluded by files.exclude.",
+            "order": 20,
+            "markdownDescription": "Show files and folders excluded by the built-in `files.exclude` setting."
+          },
+          "orderedExplorer.followSymlinks": {
+            "type": "boolean",
+            "scope": "window",
+            "default": false,
+            "description": "Allow expanding directory symbolic links. Disabled by default to prevent recursive loops.",
+            "order": 30,
+            "markdownDescription": "Allow expanding directory symbolic links. Disabled by default to reduce recursive-loop risk."
+          }
+        }
+      },
+      {
+        "title": "Ordered Explorer: Deletion",
+        "order": 30,
+        "properties": {
+          "orderedExplorer.confirmTrashDelete": {
+            "type": "boolean",
+            "scope": "window",
+            "default": true,
+            "description": "Ask for confirmation before moving resources to Trash. The confirmation dialog can disable future prompts.",
+            "order": 10,
+            "markdownDescription": "Ask for confirmation before moving resources to Trash. The dialog can disable future prompts."
+          },
+          "orderedExplorer.confirmPermanentDelete": {
+            "type": "boolean",
+            "scope": "window",
+            "default": true,
+            "description": "Ask for confirmation before permanently deleting resources. The confirmation dialog can disable future prompts.",
+            "order": 20,
+            "markdownDescription": "Ask for confirmation before permanently deleting resources. The dialog can disable future prompts."
+          },
+          "orderedExplorer.confirmDelete": {
+            "type": "boolean",
+            "scope": "window",
+            "default": true,
+            "description": "Legacy shared delete-confirmation setting. Use the separate Trash and permanent-delete settings instead.",
+            "deprecationMessage": "Use orderedExplorer.confirmTrashDelete and orderedExplorer.confirmPermanentDelete.",
+            "order": 90,
+            "markdownDescription": "Deprecated shared delete-confirmation setting. Use the separate Trash and permanent-delete settings instead."
+          }
+        }
+      },
+      {
+        "title": "Ordered Explorer: Context Menu",
+        "order": 40,
+        "properties": {
+          "orderedExplorer.contextMenu.useSubmenus": {
+            "type": "boolean",
+            "scope": "window",
+            "default": true,
+            "description": "Group related Ordered Explorer right-click actions into Open In, Clipboard, and Order submenus.",
+            "order": 10,
+            "markdownDescription": "Group related Ordered Explorer right-click actions into native submenus."
+          },
+          "orderedExplorer.contextMenu.useEmojiTitles": {
+            "type": "boolean",
+            "scope": "window",
+            "default": true,
+            "description": "Prefix Ordered Explorer right-click menu and submenu titles with emoji symbols. Disable for plain text labels.",
+            "order": 20,
+            "markdownDescription": "Prefix Ordered Explorer right-click menu and submenu titles with emoji symbols."
+          }
         }
       }
-    },
+    ],
     "submenus": [
       {
         "id": "orderedExplorer.submenu.new",
@@ -1280,7 +1332,7 @@
       },
       {
         "id": "orderedExplorer.submenu.newEmoji",
-        "label": "New..."
+        "label": "🆕 New..."
       },
       {
         "id": "orderedExplorer.submenu.delete",
@@ -1288,7 +1340,7 @@
       },
       {
         "id": "orderedExplorer.submenu.deleteEmoji",
-        "label": "Delete..."
+        "label": "🗑️ Delete..."
       },
       {
         "id": "orderedExplorer.submenu.openIn",
@@ -1296,7 +1348,7 @@
       },
       {
         "id": "orderedExplorer.submenu.openInEmoji",
-        "label": "Open In..."
+        "label": "📂 Open In..."
       },
       {
         "id": "orderedExplorer.submenu.clipboard",
@@ -1312,7 +1364,7 @@
       },
       {
         "id": "orderedExplorer.submenu.pathEmoji",
-        "label": "Path"
+        "label": "🔗 Path"
       },
       {
         "id": "orderedExplorer.submenu.content",
@@ -1320,7 +1372,7 @@
       },
       {
         "id": "orderedExplorer.submenu.contentEmoji",
-        "label": "Content"
+        "label": "🤖 Content"
       },
       {
         "id": "orderedExplorer.submenu.order",

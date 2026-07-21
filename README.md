@@ -331,10 +331,10 @@ Blank-space double-click creation is intentionally not implemented. The stable V
 
 ## Delete behavior
 
-- **Delete** moves the selected files or folders to Trash when the filesystem supports it.
+- **Trash** moves the selected files or folders to the operating-system Trash when the filesystem supports it.
 - **Shift+Delete** permanently deletes the selection with `useTrash: false`.
 - Each confirmation dialog includes **Don't Ask Again**. Choosing it performs the current deletion and disables future prompts for that deletion type.
-- Trash and permanent deletion use separate settings, so disabling the ordinary Delete prompt does not disable the Shift+Delete warning.
+- Trash and permanent deletion use separate settings, so disabling the Trash prompt does not disable the Shift+Delete warning.
 
 ## Collapse button
 
@@ -365,19 +365,19 @@ With submenus enabled, the right-click menu is organized as:
 
 ────────────────────────
 
-New...  ›
+🆕 New...  ›
     📄 File...
     📁 Folder...
 
 ────────────────────────
 
-Delete...  ›
+🗑️ Delete...  ›
     🗑️ Trash
     ⚠️ Permanently
 
 ────────────────────────
 
-Open In...  ›
+📂 Open In...  ›
     📂 File Explorer
     💻 Integrated Terminal
 
@@ -390,13 +390,13 @@ Open In...  ›
 
 ────────────────────────
 
-Path  ›
+🔗 Path  ›
     🔗 Copy Absolute Path
     🧭 Copy Relative Path
 
 ────────────────────────
 
-Content  ›
+🤖 Content  ›
     🤖 Copy Content to Clipboard
     🌳 Copy Hierarchy to Clipboard
 
@@ -426,7 +426,7 @@ With submenus disabled, the commands use a flat eight-section layout:
 
 ────────────────────────
 
-🗑️ Delete
+🗑️ Trash
 ⚠️ Delete Permanently
 
 ────────────────────────
@@ -513,20 +513,43 @@ Right-click a file or directory and open **Order** when submenus are enabled:
 
 ## Settings
 
-| Setting | Purpose |
-|---|---|
-| `orderedExplorer.order` | Root order for a single-root workspace |
-| `orderedExplorer.directoryOrder` | Nested-directory order map |
-| `orderedExplorer.roots` | Per-root order for multi-root workspaces |
-| `orderedExplorer.fallbackSort` | Sorting for `*` and unlisted items |
-| `orderedExplorer.autoReveal` | Reveal the active editor file |
-| `orderedExplorer.showExcludedFiles` | Ignore or apply `files.exclude` |
-| `orderedExplorer.confirmTrashDelete` | Confirm before moving resources to Trash |
-| `orderedExplorer.confirmPermanentDelete` | Confirm before permanent deletion |
-| `orderedExplorer.confirmDelete` | Deprecated shared fallback for older workspaces |
-| `orderedExplorer.followSymlinks` | Expand directory symbolic links |
-| `orderedExplorer.contextMenu.useSubmenus` | Group related right-click actions into submenus |
-| `orderedExplorer.contextMenu.useEmojiTitles` | Prefix right-click menu titles with emoji symbols |
+Open VS Code Settings and search for **Ordered Explorer**. The extension contributes four explicit Settings UI sections:
+
+- **Ordered Explorer: Ordering**
+- **Ordered Explorer: Behavior**
+- **Ordered Explorer: Deletion**
+- **Ordered Explorer: Context Menu**
+
+All 11 active extension settings are declared in `package.json` and are discoverable through the Settings UI. Boolean, enum, and the simple root-order array can be changed through the graphical editor. The nested `directoryOrder` and `roots` objects appear with an **Edit in settings.json** action because VS Code edits nested object/array schemas as JSON. The legacy `orderedExplorer.confirmDelete` compatibility setting is deprecated and is intentionally hidden by VS Code unless it was already configured.
+
+| Setting | Settings section | Purpose |
+|---|---|---|
+| `orderedExplorer.order` | Ordering | Root order for a single-root workspace |
+| `orderedExplorer.directoryOrder` | Ordering | Nested-directory order map |
+| `orderedExplorer.roots` | Ordering | Per-root order for multi-root workspaces |
+| `orderedExplorer.fallbackSort` | Ordering | Sorting for `*` and unlisted items |
+| `orderedExplorer.autoReveal` | Behavior | Reveal the active editor file while Ordered Explorer is visible |
+| `orderedExplorer.showExcludedFiles` | Behavior | Ignore or apply `files.exclude` |
+| `orderedExplorer.followSymlinks` | Behavior | Expand directory symbolic links |
+| `orderedExplorer.confirmTrashDelete` | Deletion | Confirm before moving resources to Trash |
+| `orderedExplorer.confirmPermanentDelete` | Deletion | Confirm before permanent deletion |
+| `orderedExplorer.confirmDelete` | Deletion | Deprecated shared fallback for older workspaces |
+| `orderedExplorer.contextMenu.useSubmenus` | Context Menu | Group related right-click actions into submenus |
+| `orderedExplorer.contextMenu.useEmojiTitles` | Context Menu | Prefix right-click menu and submenu titles with emoji symbols |
+
+Example user settings:
+
+```jsonc
+{
+    "orderedExplorer.autoReveal": true,
+    "orderedExplorer.showExcludedFiles": false,
+    "orderedExplorer.followSymlinks": false,
+    "orderedExplorer.confirmTrashDelete": true,
+    "orderedExplorer.confirmPermanentDelete": true,
+    "orderedExplorer.contextMenu.useSubmenus": true,
+    "orderedExplorer.contextMenu.useEmojiTitles": true
+}
+```
 
 ## Development notes
 
