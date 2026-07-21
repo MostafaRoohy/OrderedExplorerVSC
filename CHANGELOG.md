@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.1 — 2026-07-21
+
+- Removed the synthetic **Double-click to create a file or folder** tree row.
+- Removed the double-click tracker, creation-surface node state and associated tests.
+- Retained unified file/folder creation through the New File toolbar and context-menu command.
+- Prevented automatic active-file reveal from activating Ordered Explorer while another sidebar view is open.
+- Preserved intentional view activation for the explicit **Reveal Active File** command.
+- Prevented root-expansion maintenance from revealing a hidden Ordered Explorer view during startup.
+- Added unit tests for automatic-versus-explicit reveal policy.
+
 ## 0.3.0 — 2026-07-21
 
 - Removed the `+` Expand All action and retained one Collapse All toolbar button.

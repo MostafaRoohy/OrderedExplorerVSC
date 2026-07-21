@@ -17,7 +17,7 @@ Status definitions:
 | Keyboard navigation | Implemented | Native `TreeView` behavior |
 | Open file | Implemented | `vscode.open` |
 | Open to side | Implemented | `vscode.open` with side column |
-| Auto-reveal active file | Implemented | `TreeView.reveal()` and parent chain |
+| Auto-reveal active file | Implemented | Reveals only while Ordered Explorer is visible; explicit reveal may activate the view |
 | Refresh and file watching | Implemented | `FileSystemWatcher` plus targeted refresh |
 | Multi-root workspace | Implemented | Per-root configuration |
 | Remote and virtual filesystems | Implemented | `vscode.workspace.fs` |
@@ -36,14 +36,14 @@ Status definitions:
 | Exact native insertion indicator | Unavailable | Target item is exposed, pointer geometry is not |
 | Authoritative custom order | Implemented | Workspace settings and deterministic sorter |
 | Order metadata synchronization | Implemented | Extension-driven rename/move/delete |
-| Blank-area double-click | Partial | Public TreeView exposes no blank-surface event; a dedicated native creation-surface row implements reliable double-click creation |
-| Compact folders | Unavailable in v0.3.0 | Public tree can simulate it, but exact native semantics require a separate model layer |
-| File nesting | Unavailable in v0.3.0 | Planned; native Explorer nesting rules are not exposed as a reusable API |
+| Blank-area double-click | Unavailable | Public TreeView exposes no blank-surface event; no synthetic placeholder row is added |
+| Compact folders | Unavailable in v0.3.1 | Public tree can simulate it, but exact native semantics require a separate model layer |
+| File nesting | Unavailable in v0.3.1 | Planned; native Explorer nesting rules are not exposed as a reusable API |
 | Inline rename control | Unavailable | Private Workbench editor |
 | Native Explorer clipboard state | Unavailable | Private Explorer service |
 | Replace `workbench.explorer.fileView` | Unavailable | VS Code permits only contributed views |
 | Third-party menus targeting native Explorer ID | Unavailable | Those extensions do not target custom tree views |
 
-## Release criterion used for v0.3.0
+## Release criterion used for v0.3.1
 
 The extension is usable as a primary explorer for routine project work and implements the complete custom-order contract. It does not claim internal one-for-one parity where VS Code exposes no stable API.

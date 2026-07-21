@@ -6,24 +6,24 @@ The order is stored in the saved `.code-workspace` file under its `settings` obj
 
 ## Install a prebuilt VSIX
 
-When you already have `ordered-explorer-0.3.0.vsix`, install it from VS Code:
+When you already have `ordered-explorer-0.3.1.vsix`, install it from VS Code:
 
 1. Open **Extensions**.
 2. Open the `...` menu.
 3. Choose **Install from VSIX...**.
-4. Select `ordered-explorer-0.3.0.vsix`.
+4. Select `ordered-explorer-0.3.1.vsix`.
 5. Reload VS Code.
 
 Or install it from a terminal opened in the directory containing the VSIX:
 
 ```bash
-code --install-extension ./ordered-explorer-0.3.0.vsix
+code --install-extension ./ordered-explorer-0.3.1.vsix
 ```
 
 Use `--force` when reinstalling the same extension version after rebuilding it:
 
 ```bash
-code --install-extension ./ordered-explorer-0.3.0.vsix --force
+code --install-extension ./ordered-explorer-0.3.1.vsix --force
 ```
 
 ## Build a VSIX from source
@@ -60,13 +60,13 @@ After the command succeeds, the generated package appears in the repository root
 
 ```text
 OrderedExplorerVSC/
-└── ordered-explorer-0.3.0.vsix
+└── ordered-explorer-0.3.1.vsix
 ```
 
 Install that generated package with:
 
 ```bash
-code --install-extension ./ordered-explorer-0.3.0.vsix
+code --install-extension ./ordered-explorer-0.3.1.vsix
 ```
 
 ### Build from a downloaded source archive
@@ -78,7 +78,7 @@ npm ci
 npm run package:vsix
 ```
 
-The result is the same `ordered-explorer-0.3.0.vsix` file in the project root.
+The result is the same `ordered-explorer-0.3.1.vsix` file in the project root.
 
 ### What the packaging command does
 
@@ -171,10 +171,10 @@ On Linux and Windows, you can also enable the VS Code command-line launcher and 
 
 #### Reinstalling does not appear to change the extension
 
-When rebuilding version `0.3.0`, force the reinstall and reload VS Code:
+When rebuilding version `0.3.1`, force the reinstall and reload VS Code:
 
 ```bash
-code --install-extension ./ordered-explorer-0.3.0.vsix --force
+code --install-extension ./ordered-explorer-0.3.1.vsix --force
 ```
 
 For distributed releases, increment the `version` field in `package.json` before packaging a new release.
@@ -317,7 +317,7 @@ Right-click the Explorer sidebar header, hide **Folders**, and keep **Ordered Ex
 
 ## Fast file and folder creation
 
-Use the **New File** button in the Ordered Explorer title bar, or double-click the dedicated **Double-click to create a file or folder** row directly below the workspace root. The same input creates both files and directories:
+Use the **New File** button in the Ordered Explorer title bar or the **New File...** command on a folder's context menu. The same input creates both files and directories:
 
 ```text
 report.py          → creates a file
@@ -327,7 +327,7 @@ src/api/client.py  → creates parent directories and then the file
 
 A trailing `/` or `\` means **directory**. This makes a separate New Folder title-bar button unnecessary; the New Folder command remains available from a folder's context menu.
 
-The stable VS Code `TreeView` API does not expose mouse events for completely blank whitespace. It also does not reliably run item commands on collapsible root rows. Ordered Explorer therefore contributes a non-collapsible creation-surface row under each workspace root; two clicks on that row reliably open the unified creation input.
+Blank-space double-click creation is intentionally not implemented. The stable VS Code `TreeView` API does not expose pointer events for unused tree whitespace, and the previous synthetic creation row was removed because it added permanent visual clutter.
 
 ## Delete behavior
 
@@ -353,7 +353,7 @@ Ordered Explorer contributes one **Collapse All** button:
 - Configurable fallback sorting.
 - Live configuration refresh.
 - Filesystem watching and targeted refresh.
-- Active-editor auto-reveal.
+- Active-editor auto-reveal while Ordered Explorer is already visible, preventing Source Control and other sidebar views from being replaced.
 - `files.exclude` filtering and an excluded-files toggle.
 - Unified file/folder creation; a trailing slash creates a directory.
 - Rename, move, duplicate, Trash/delete, permanent Shift+Delete, cut, copy and paste.

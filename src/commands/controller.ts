@@ -3,12 +3,11 @@ import { ExplorerNode } from '../explorer/node';
 import { OrderedExplorerProvider } from '../explorer/provider';
 import { OrderConfigurationService } from '../ordering/config';
 import { ReorderService } from '../ordering/reorder';
-import { DoubleClickTracker } from '../services/doubleClick';
 import { FileOperationsService } from '../services/fileOperations';
+import { mayRevealTree } from '../services/revealPolicy';
 
 export class CommandController implements vscode.Disposable {
     private readonly disposables: vscode.Disposable[] = [];
-    private readonly surfaceDoubleClick = new DoubleClickTracker();
     private isCollapsingAll = false;
 
     public constructor(
@@ -20,9 +19,7 @@ export class CommandController implements vscode.Disposable {
     ) {
         this.register('orderedExplorer.refresh', () => this.provider.refresh());
         this.register('orderedExplorer.collapseAll', () => this.collapseAll());
-        this.register('orderedExplorer.surfaceActivate', (item) =>
-            this.handleSurfaceActivation(item));
-        this.register('orderedExplorer.revealActiveFile', () => this.revealActiveFile(true));
+        this.register('orderedExplorer.revealActiveFile', () => this.revealActiveFile(true, true));
         this.register('orderedExplorer.toggleExcluded', () => this.toggleExcluded());
         this.register('orderedExplorer.open', (item, selected) =>
             this.fileOperations.open(this.resolveNodes(item, selected)));
@@ -106,7 +103,14 @@ export class CommandController implements vscode.Disposable {
         }
     }
 
-    public async revealActiveFile(select: boolean = false): Promise<void> {
+    public async revealActiveFile(
+        select: boolean = false,
+        allowViewActivation: boolean = false,
+    ): Promise<void> {
+        if (!mayRevealTree(this.treeView.visible, allowViewActivation)) {
+            return;
+        }
+
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
             return;
@@ -160,12 +164,11 @@ export class CommandController implements vscode.Disposable {
             ? [item]
             : (selection.length ? selection : (item ? [item] : []));
 
-        return resolved.filter((node) => !node.isCreationSurface);
+        return resolved;
     }
 
     private resolvePrimary(item?: ExplorerNode): ExplorerNode | undefined {
-        const node = item ?? this.treeView.selection[0];
-        return node?.isCreationSurface ? node.parent : node;
+        return item ?? this.treeView.selection[0];
     }
 
     private async collapseAll(): Promise<void> {
@@ -185,7 +188,7 @@ export class CommandController implements vscode.Disposable {
     }
 
     private async keepRootExpanded(root: ExplorerNode): Promise<void> {
-        if (!root.isWorkspaceRoot) {
+        if (!this.treeView.visible || !root.isWorkspaceRoot) {
             return;
         }
 
@@ -198,18 +201,6 @@ export class CommandController implements vscode.Disposable {
         } catch {
             // The workspace root may have been removed while the command was running.
         }
-    }
-
-    private async handleSurfaceActivation(item?: ExplorerNode): Promise<void> {
-        if (!item?.isCreationSurface || !item.parent) {
-            return;
-        }
-
-        if (!this.surfaceDoubleClick.activate(item.id)) {
-            return;
-        }
-
-        await this.fileOperations.createFile(item.parent);
     }
 
     private async toggleExcluded(): Promise<void> {

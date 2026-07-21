@@ -8,7 +8,7 @@ Hide the original **Folders** view to use Ordered Explorer as the primary tree.
 
 ## Blank-space double-click events
 
-The stable `TreeView` API does not expose pointer or double-click events for completely blank whitespace. Commands on collapsible root rows are also not reliable for this gesture. Ordered Explorer therefore adds a non-collapsible creation-surface row directly beneath each workspace root. Double-clicking that row opens the unified file/folder input while preserving the native tree implementation.
+The stable `TreeView` API does not expose pointer or double-click events for completely blank whitespace. Commands on collapsible root rows are also not reliable for this gesture. Ordered Explorer does not add a synthetic creation row; use the New File toolbar or context-menu command instead.
 
 ## Rename user interface
 
@@ -24,7 +24,7 @@ The public drag/drop API reports the target tree item but not whether the pointe
 
 ## Compact folders and file nesting
 
-Version 0.3.0 does not compress one-child folder chains or apply `explorer.fileNesting.patterns`. Implementing these in a custom tree is possible, but it changes parentage, selection, operation targets and reveal behavior. They are intentionally excluded until they can be added without weakening file-operation correctness.
+Version 0.3.1 does not compress one-child folder chains or apply `explorer.fileNesting.patterns`. Implementing these in a custom tree is possible, but it changes parentage, selection, operation targets and reveal behavior. They are intentionally excluded until they can be added without weakening file-operation correctness.
 
 ## Extension-managed clipboard
 
