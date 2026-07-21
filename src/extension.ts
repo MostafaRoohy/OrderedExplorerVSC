@@ -23,7 +23,7 @@ export function activate(context: vscode.ExtensionContext): void {
     const treeView = vscode.window.createTreeView('orderedExplorer.files', {
         treeDataProvider: provider,
         canSelectMany: true,
-        showCollapseAll: true,
+        showCollapseAll: false,
         dragAndDropController: dragAndDrop,
     });
     treeView.description = 'workspace-defined order';
@@ -50,6 +50,7 @@ export function activate(context: vscode.ExtensionContext): void {
         vscode.workspace.onDidDeleteFiles(() => provider.refresh()),
     );
 
+    void commands.initialize();
     void commands.revealActiveFile(false);
 }
 

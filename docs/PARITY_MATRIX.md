@@ -11,7 +11,7 @@ Status definitions:
 | Native tree styling and themes | Implemented | VS Code `TreeView` renderer |
 | Active file-icon theme | Implemented | `TreeItem.resourceUri` |
 | Git/resource decorations | Implemented by host | Resource URI is supplied to VS Code |
-| Expand/collapse | Implemented | Native tree state |
+| Expand/collapse | Implemented | State-aware Collapse All / Expand All; roots stay expanded |
 | Persistent expansion and selection | Implemented by host | Stable `TreeItem.id` values |
 | Multi-selection | Implemented | `canSelectMany` |
 | Keyboard navigation | Implemented | Native `TreeView` behavior |
@@ -23,9 +23,9 @@ Status definitions:
 | Remote and virtual filesystems | Implemented | `vscode.workspace.fs` |
 | `files.exclude` | Implemented | Glob-based filtering |
 | Show excluded files | Implemented | Workspace setting toggle |
-| Create file/folder | Implemented | Workspace filesystem API |
+| Create file/folder | Implemented | Unified input; trailing slash creates a directory |
 | Rename | Partial | Input box; public API has no inline row editor |
-| Trash/delete | Implemented | Trash request with permanent fallback |
+| Trash/delete | Implemented | Delete uses Trash; Shift+Delete is permanent |
 | Move, duplicate and copy | Implemented | Workspace filesystem API |
 | Cut/copy/paste | Implemented | Extension-managed clipboard |
 | Compare selected | Implemented | `vscode.diff` |
@@ -36,13 +36,14 @@ Status definitions:
 | Exact native insertion indicator | Unavailable | Target item is exposed, pointer geometry is not |
 | Authoritative custom order | Implemented | Workspace settings and deterministic sorter |
 | Order metadata synchronization | Implemented | Extension-driven rename/move/delete |
-| Compact folders | Unavailable in v0.1.0 | Public tree can simulate it, but exact native semantics require a separate model layer |
-| File nesting | Unavailable in v0.1.0 | Planned; native Explorer nesting rules are not exposed as a reusable API |
+| Blank-area double-click | Unavailable | Public TreeView exposes no blank-surface mouse event; root-row double-click is implemented |
+| Compact folders | Unavailable in v0.2.0 | Public tree can simulate it, but exact native semantics require a separate model layer |
+| File nesting | Unavailable in v0.2.0 | Planned; native Explorer nesting rules are not exposed as a reusable API |
 | Inline rename control | Unavailable | Private Workbench editor |
 | Native Explorer clipboard state | Unavailable | Private Explorer service |
 | Replace `workbench.explorer.fileView` | Unavailable | VS Code permits only contributed views |
 | Third-party menus targeting native Explorer ID | Unavailable | Those extensions do not target custom tree views |
 
-## Release criterion used for v0.1.0
+## Release criterion used for v0.2.0
 
 The extension is usable as a primary explorer for routine project work and implements the complete custom-order contract. It does not claim internal one-for-one parity where VS Code exposes no stable API.

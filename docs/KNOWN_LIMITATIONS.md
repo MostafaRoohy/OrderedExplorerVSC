@@ -6,6 +6,10 @@ The extension contributes `orderedExplorer.files` inside the standard Explorer c
 
 Hide the original **Folders** view to use Ordered Explorer as the primary tree.
 
+## Blank-space double-click events
+
+The stable `TreeView` API does not expose pointer or double-click events for completely blank whitespace. Ordered Explorer therefore attaches the double-click creation gesture to the workspace-root row. This preserves the native tree implementation without using unsupported DOM access.
+
 ## Rename user interface
 
 Rename uses `showInputBox`. VS Code does not expose the built-in Explorer's inline editable tree row.
@@ -20,7 +24,7 @@ The public drag/drop API reports the target tree item but not whether the pointe
 
 ## Compact folders and file nesting
 
-Version 0.1.0 does not compress one-child folder chains or apply `explorer.fileNesting.patterns`. Implementing these in a custom tree is possible, but it changes parentage, selection, operation targets and reveal behavior. They are intentionally excluded until they can be added without weakening file-operation correctness.
+Version 0.2.0 does not compress one-child folder chains or apply `explorer.fileNesting.patterns`. Implementing these in a custom tree is possible, but it changes parentage, selection, operation targets and reveal behavior. They are intentionally excluded until they can be added without weakening file-operation correctness.
 
 ## Extension-managed clipboard
 

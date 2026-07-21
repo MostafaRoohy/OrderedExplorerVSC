@@ -38,6 +38,11 @@ export class OrderedExplorerProvider implements vscode.TreeDataProvider<Explorer
 
         if (node.isWorkspaceRoot) {
             item.iconPath = new vscode.ThemeIcon('root-folder');
+            item.command = {
+                command: 'orderedExplorer.surfaceActivate',
+                title: 'Create File or Folder',
+                arguments: [node],
+            };
         }
 
         if (!node.isDirectory) {
@@ -275,6 +280,9 @@ export class OrderedExplorerProvider implements vscode.TreeDataProvider<Explorer
     private createTooltip(node: ExplorerNode): vscode.MarkdownString {
         const tooltip = new vscode.MarkdownString(undefined, true);
         tooltip.appendCodeblock(node.uri.toString());
+        if (node.isWorkspaceRoot) {
+            tooltip.appendMarkdown('\nDouble-click the workspace root to create a file or folder.');
+        }
         if (node.isSymbolicLink) {
             tooltip.appendMarkdown('\nSymbolic link');
         }

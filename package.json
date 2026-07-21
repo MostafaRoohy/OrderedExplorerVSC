@@ -2,7 +2,7 @@
   "name": "ordered-explorer",
   "displayName": "Ordered Explorer",
   "description": "A native-looking workspace explorer with authoritative custom file ordering stored in .code-workspace settings.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publisher": "mostafaroohy-local",
   "license": "MIT",
   "engines": {
@@ -62,6 +62,12 @@
         "icon": "$(collapse-all)"
       },
       {
+        "command": "orderedExplorer.expandAll",
+        "title": "Expand All",
+        "category": "Ordered Explorer",
+        "icon": "$(add)"
+      },
+      {
         "command": "orderedExplorer.revealActiveFile",
         "title": "Reveal Active File",
         "category": "Ordered Explorer",
@@ -104,6 +110,11 @@
       {
         "command": "orderedExplorer.delete",
         "title": "Delete",
+        "category": "Ordered Explorer"
+      },
+      {
+        "command": "orderedExplorer.deletePermanently",
+        "title": "Delete Permanently",
         "category": "Ordered Explorer"
       },
       {
@@ -222,29 +233,29 @@
           "group": "navigation@1"
         },
         {
-          "command": "orderedExplorer.newFolder",
+          "command": "orderedExplorer.refresh",
           "when": "view == orderedExplorer.files",
           "group": "navigation@2"
         },
         {
-          "command": "orderedExplorer.refresh",
-          "when": "view == orderedExplorer.files",
+          "command": "orderedExplorer.collapseAll",
+          "when": "view == orderedExplorer.files && !orderedExplorer.allCollapsed",
           "group": "navigation@3"
         },
         {
-          "command": "orderedExplorer.collapseAll",
-          "when": "view == orderedExplorer.files",
-          "group": "navigation@4"
+          "command": "orderedExplorer.expandAll",
+          "when": "view == orderedExplorer.files && orderedExplorer.allCollapsed",
+          "group": "navigation@3"
         },
         {
           "command": "orderedExplorer.revealActiveFile",
           "when": "view == orderedExplorer.files",
-          "group": "navigation@5"
+          "group": "navigation@4"
         },
         {
           "command": "orderedExplorer.toggleExcluded",
           "when": "view == orderedExplorer.files",
-          "group": "navigation@6"
+          "group": "navigation@5"
         }
       ],
       "view/item/context": [
@@ -272,6 +283,11 @@
           "command": "orderedExplorer.delete",
           "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
           "group": "2_workspace@2"
+        },
+        {
+          "command": "orderedExplorer.deletePermanently",
+          "when": "view == orderedExplorer.files && viewItem != orderedExplorer.root",
+          "group": "2_workspace@2.1"
         },
         {
           "command": "orderedExplorer.duplicate",
@@ -380,6 +396,12 @@
         "command": "orderedExplorer.delete",
         "key": "delete",
         "mac": "cmd+backspace",
+        "when": "focusedView == orderedExplorer.files"
+      },
+      {
+        "command": "orderedExplorer.deletePermanently",
+        "key": "shift+delete",
+        "mac": "shift+cmd+backspace",
         "when": "focusedView == orderedExplorer.files"
       },
       {
@@ -492,7 +514,7 @@
           "type": "boolean",
           "scope": "window",
           "default": true,
-          "description": "Ask for confirmation before permanently deleting resources."
+          "description": "Ask for confirmation before moving resources to Trash or deleting them permanently."
         },
         "orderedExplorer.followSymlinks": {
           "type": "boolean",
@@ -525,5 +547,14 @@
     "mocha": "^11.7.6",
     "typescript": "^7.0.2",
     "vitest": "^3.2.4"
-  }
+  },
+  "icon": "resources/ordered-explorer.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MostafaRoohy/OrderedExplorerVSC.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MostafaRoohy/OrderedExplorerVSC/issues"
+  },
+  "homepage": "https://github.com/MostafaRoohy/OrderedExplorerVSC#readme"
 }

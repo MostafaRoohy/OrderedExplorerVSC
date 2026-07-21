@@ -7,13 +7,13 @@
 1. Open Extensions.
 2. Select the `...` menu.
 3. Select **Install from VSIX...**.
-4. Select `ordered-explorer-0.1.0.vsix`.
+4. Select `ordered-explorer-0.2.0.vsix`.
 5. Reload VS Code.
 
 ### Local PC terminal
 
 ```bash
-code --install-extension ordered-explorer-0.1.0.vsix
+code --install-extension ordered-explorer-0.2.0.vsix
 ```
 
 To uninstall:

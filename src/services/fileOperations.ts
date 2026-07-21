@@ -12,6 +12,7 @@ import {
 } from '../util/path';
 import { ExplorerNode } from '../explorer/node';
 import { OrderedExplorerProvider } from '../explorer/provider';
+import { parseResourceCreationInput } from './resourceInput';
 
 export class FileOperationsService {
     private clipboard: ClipboardState | undefined;
@@ -42,22 +43,31 @@ export class FileOperationsService {
         }
 
         const name = await vscode.window.showInputBox({
-            title: 'New File',
-            prompt: `Create a file inside ${directory.name}`,
-            placeHolder: 'path/to/file.py',
+            title: 'New File or Folder',
+            prompt: `Create inside ${directory.name}. End the name with / to create a folder.`,
+            placeHolder: 'path/to/file.py or path/to/folder/',
             validateInput: this.validateRelativeInput,
         });
         if (!name) {
             return;
         }
 
-        const uri = this.joinUserPath(directory.uri, name);
-        await this.ensureParentDirectory(uri);
+        const input = parseResourceCreationInput(name);
+        const uri = this.joinUserPath(directory.uri, input.relativePath);
         if (await this.exists(uri)) {
-            void vscode.window.showErrorMessage(`A resource named “${name}” already exists.`);
+            void vscode.window.showErrorMessage(
+                `A resource named “${input.relativePath}” already exists.`,
+            );
             return;
         }
 
+        if (input.kind === 'directory') {
+            await vscode.workspace.fs.createDirectory(uri);
+            this.provider.refresh(directory);
+            return;
+        }
+
+        await this.ensureParentDirectory(uri);
         await vscode.workspace.fs.writeFile(uri, new Uint8Array());
         this.provider.refresh(directory);
         await vscode.commands.executeCommand('vscode.open', uri);
@@ -126,46 +136,65 @@ export class FileOperationsService {
         this.provider.refresh(node.parent);
     }
 
-    public async delete(nodes: readonly ExplorerNode[]): Promise<void> {
+    public async delete(
+        nodes: readonly ExplorerNode[],
+        permanently: boolean = false,
+    ): Promise<void> {
         const deletable = nodes.filter((node) => !node.isWorkspaceRoot);
         if (!deletable.length) {
             return;
         }
 
         const configuration = this.orderConfiguration.get(deletable[0]!.workspaceFolder);
+        const names = deletable.slice(0, 5).map((node) => node.name).join(', ');
+        const suffix = deletable.length > 5 ? ` and ${deletable.length - 5} more` : '';
+        const actionLabel = permanently ? 'Delete Permanently' : 'Move to Trash';
+
         if (configuration.confirmDelete) {
-            const names = deletable.slice(0, 5).map((node) => node.name).join(', ');
-            const suffix = deletable.length > 5 ? ` and ${deletable.length - 5} more` : '';
+            const message = permanently
+                ? `Permanently delete ${names}${suffix}? This action cannot be undone.`
+                : `Move ${names}${suffix} to Trash?`;
             const confirmation = await vscode.window.showWarningMessage(
-                `Move ${names}${suffix} to Trash?`,
+                message,
                 { modal: true },
-                'Move to Trash',
+                actionLabel,
             );
-            if (confirmation !== 'Move to Trash') {
+            if (confirmation !== actionLabel) {
                 return;
             }
         }
 
         for (const node of deletable) {
-            try {
-                await vscode.workspace.fs.delete(node.uri, {
-                    recursive: node.isDirectory,
-                    useTrash: true,
-                });
-            } catch (error) {
-                const fallback = await vscode.window.showWarningMessage(
-                    `Trash is unavailable for “${node.name}”. Delete it permanently instead?`,
-                    { modal: true, detail: error instanceof Error ? error.message : String(error) },
-                    'Delete Permanently',
-                );
-                if (fallback !== 'Delete Permanently') {
-                    continue;
-                }
+            if (permanently) {
                 await vscode.workspace.fs.delete(node.uri, {
                     recursive: node.isDirectory,
                     useTrash: false,
                 });
+            } else {
+                try {
+                    await vscode.workspace.fs.delete(node.uri, {
+                        recursive: node.isDirectory,
+                        useTrash: true,
+                    });
+                } catch (error) {
+                    const fallback = await vscode.window.showWarningMessage(
+                        `Trash is unavailable for “${node.name}”. Delete it permanently instead?`,
+                        {
+                            modal: true,
+                            detail: error instanceof Error ? error.message : String(error),
+                        },
+                        'Delete Permanently',
+                    );
+                    if (fallback !== 'Delete Permanently') {
+                        continue;
+                    }
+                    await vscode.workspace.fs.delete(node.uri, {
+                        recursive: node.isDirectory,
+                        useTrash: false,
+                    });
+                }
             }
+
             await this.orderConfiguration.deleteEntry(
                 node.workspaceFolder,
                 parentRelativePath(node.workspaceFolder, node.uri),
@@ -433,6 +462,9 @@ export class FileOperationsService {
         const trimmed = value.trim();
         if (!trimmed) {
             return 'A name is required.';
+        }
+        if (!trimmed.replace(/[\\/]+$/, '')) {
+            return 'A file or folder name is required before the trailing slash.';
         }
         if (trimmed.startsWith('/') || /^[A-Za-z]:[\\/]/.test(trimmed)) {
             return 'Use a path relative to the selected folder.';

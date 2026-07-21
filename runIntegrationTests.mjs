@@ -10,7 +10,7 @@ try {
         extensionDevelopmentPath: root,
         extensionTestsPath: path.join(root, 'test', 'integration', 'index.js'),
         launchArgs: [
-            path.join(root, '.vscode-test', 'Project_Something.code-workspace'),
+            path.join(root, 'test', 'fixtures', 'Project_Something.code-workspace'),
             '--disable-extensions',
             '--disable-gpu',
         ],
